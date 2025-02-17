@@ -1,0 +1,42 @@
+.card {
+    transition: transform 0.2s ease-in-out;
+}
+
+.card:hover {
+    transform: scale(1.05);
+}
+
+.profile-container {
+    max-width: 900px;
+    margin: auto;
+}
+
+.img-fluid {
+    border-radius: 8px;
+}
+
+.loading {
+    text-align: center;
+    font-size: 1.2em;
+}
+
+.fixed-size-image {
+    width: 300px;  /* Largeur fixe */
+    height: 300px; /* Hauteur fixe */
+    object-fit: cover;  /* Cela permet de remplir l'espace sans déformer l'image */
+    border-radius: 8px;  /* Optionnel, pour arrondir les bords */
+}
+
+.fixed-size-thumbnail{
+    width: 125%;  /* Largeur fixe */
+    height: 165px; /* Hauteur fixe */
+    object-fit: cover;  /* Cela permet de remplir l'espace sans déformer l'image */
+    border-radius: 8px;  /* Optionnel, pour arrondir les bords */
+}
+  
+/* Enlever le soulignement des liens */
+a {
+text-decoration: none;
+}
+
+  

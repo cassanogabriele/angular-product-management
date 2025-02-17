@@ -1,0 +1,62 @@
+<nav class="navbar navbar-expand navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/home">
+      <img src="assets/images/logo.png" alt="Logo" height="65" />
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample02" aria-controls="navbarsExample02" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarsExample02">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/home">Accueil</a>
+        </li>
+
+        <!-- Dropdown pour sélectionner la catégorie -->
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="javascript:void(0);" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Choisir une catégorie
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <!-- Affichage des catégories dynamiquement -->
+            <li *ngFor="let category of categories">
+              <a class="dropdown-item" (click)="onCategoryChange(category.id)">
+                {{ category.name }}
+              </a>
+            </li>
+          </ul>
+        </li>       
+
+
+        <li class="nav-item" *ngIf="isLoggedIn">
+          <a class="nav-link active" aria-current="page" href="/my-products">Mes produits</a>
+        </li>
+
+        <li class="nav-item" *ngIf="isLoggedIn">
+          <a class="nav-link active" aria-current="page" href="/profile">Profile</a>
+        </li>
+      </ul>
+
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item" *ngIf="isLoggedIn">
+          <button class="btn btn-outline-info" type="button" (click)="logout()">Se déconnecter</button>
+        </li>
+        
+        <li class="nav-item" *ngIf="!isLoggedIn">
+          <button class="btn btn-outline-info" type="button"><a href="/signup" class="text-decoration-none">S'inscrire</a></button>
+        </li>
+      
+        <li class="nav-item" *ngIf="!isLoggedIn">
+          <button class="btn btn-outline-info ms-2" type="button"><a href="/login" class="text-decoration-none">Se connecter</a></button>
+        </li>
+
+        <li class="nav-item" *ngIf="isLoggedIn">
+          <a class="nav-link" href="/wishlist-details">
+            <i class="fa fa-solid fa-heart text-warning" aria-hidden="true"></i>
+          </a>
+        </li>
+      </ul>      
+    </div>
+  </div>
+</nav>

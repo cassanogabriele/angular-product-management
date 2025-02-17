@@ -1,0 +1,43 @@
+<div *ngIf="sellerDetails && sellerDetails.name; else loading">
+    <div class="seller-profile">
+        <div class="seller-info">
+            <h1>{{ sellerDetails.name }} {{ sellerDetails.firstname }}</h1>
+            <p>{{ sellerDetails.email }}</p>
+            <p>{{ sellerDetails.description }}</p>
+        </div>
+        <div class="seller-photo">
+            <img [src]="sellerDetails.photo" alt="Photo du vendeur" />
+        </div>
+    </div>
+
+    <div *ngIf="sellerDetails.products && sellerDetails.products.length > 0; else noProducts">
+        <h2>Produits du vendeur</h2>
+        <section id="section1" class="py-5 bg-light">
+            <div class="container">
+                <h2 class="mb-4">Produits Récents</h2>
+                <div class="row g-4">
+                    <div class="col-md-4" *ngFor="let product of sellerDetails.products">
+                        <div class="card h-100">
+                            <img [src]="product.defaultImage" class="card-img-top" alt="{{ product.libelle }}">
+                            <div class="card-body">
+                                <h5 class="card-title text-center fw-bold">{{ product.libelle }}</h5>
+                                <p class="card-text">{{ product.description | slice:0:100 }}...</p>
+                                <p>Prix : {{ product.prix }} €</p>
+                                <p>Quantité : {{ product.quantite }}</p>
+                                <a [routerLink]="['/product', product.id]" class="btn btn-primary">Voir l'article</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <ng-template #noProducts>
+        <p>Aucun produit trouvé pour ce vendeur.</p>
+    </ng-template>
+</div>
+
+<ng-template #loading>
+    <p>Chargement...</p>
+</ng-template>

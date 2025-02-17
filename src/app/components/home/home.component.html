@@ -1,0 +1,89 @@
+<div class="alert alert-success alert-dismissible fade show mt-4" role="alert" *ngIf="successMessage">
+    {{ successMessage }}
+    <button type="button" class="btn-close" aria-label="Close" (click)="successMessage = null"></button>
+ </div>
+
+<section id="section1" class="py-5 bg-light">
+    <div class="container">
+        <h2 class="mb-4 text-success">Produits Récents</h2>
+
+        <div class="row g-4">
+            <div class="col-md-4" *ngFor="let product of recentProducts">
+                <div class="card h-100">
+                    <img [src]="product.defaultImage" class="card-img-top" alt="{{ product.libelle }}">
+                    <div class="card-body">
+                        <h5 class="card-title text-center fw-bold">{{ product.libelle }}</h5>
+                        <p class="card-text">{{ product.description | slice:0:100 }}...</p> 
+                        <a [routerLink]="['/product', product.id]" class="btn btn-primary"  (click)="recordProduct(product.id)">Voir l'article</a>
+
+                        <div class="wishlist-icon-container d-flex justify-content-end mt-2">
+                            <i class="fa fa-solid fa-heart text-warning" aria-hidden="true" (click)="handleWishlistClick(product.id)"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="section1" class="py-5 bg-light" *ngIf="recentlyViewedProducts.length > 0">
+    <div class="container">
+        <h2 class="mb-4 text-warning">Produits récemment vus</h2>
+
+        <div class="row g-4">
+            <!-- Loop over the recent products array -->
+            <div class="col-md-4" *ngFor="let product of recentlyViewedProducts">
+                <div class="card h-100">
+                    <img [src]="product.product.defaultImage" class="card-img-top" alt="{{ product.product.libelle }}">
+                    <div class="card-body">
+                        <h5 class="card-title text-center fw-bold">{{ product.product.libelle }}</h5>
+                        <p class="card-text">{{ product.product.description | slice:0:100 }}...</p>
+                        <a [routerLink]="['/product', product.product.id]" class="btn btn-primary">Voir l'article</a>
+
+                        <div class="wishlist-icon-container d-flex justify-content-end mt-2">
+                            <i class="fa fa-solid fa-heart text-warning" aria-hidden="true" (click)="handleWishlistClick(product.id)"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="section1" class="py-5 bg-light" *ngIf="limitedProducts.length > 0">
+    <div class="container">
+        <h2 class="mb-4 text-primary">Produits par catégorie</h2>
+
+        <div *ngFor="let category of limitedProducts">
+            <h3 class="mt-4 fw-bold">{{ category.category_name }}</h3>
+            <div class="row g-4">
+                <!-- Loop over the products array -->
+                <div class="col-md-4" *ngFor="let product of category.products">
+                    <div class="card h-100">
+                        <img [src]="product.defaultImage" class="card-img-top" alt="{{ product.libelle }}">
+                        <div class="card-body">
+                            <h5 class="card-title text-center fw-bold">{{ product.libelle }}</h5>
+                            <p class="card-text">{{ product.description | slice:0:100 }}...</p>
+                            <a [routerLink]="['/product', product.product_id]" class="btn btn-primary">Voir l'article</a>
+
+                            <div class="wishlist-icon-container d-flex justify-content-end mt-2">
+                                <i class="fa fa-solid fa-heart text-warning" aria-hidden="true" (click)="handleWishlistClick(product.product_id)"></i>
+                            </div>                              
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Add placeholders if the number of products is less than 3 -->
+                <ng-container *ngIf="category.products.length < 3">
+                    <div class="col-md-4" *ngFor="let placeholder of placeholderArray(category)">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <p>Produit en attente...</p>
+                            </div>
+                        </div>
+                    </div>
+                </ng-container>
+            </div>
+        </div>
+    </div>
+</section>

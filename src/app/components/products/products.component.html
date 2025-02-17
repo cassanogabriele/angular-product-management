@@ -1,0 +1,65 @@
+<div *ngIf="alertVisible" class="alert alert-success alert-dismissible fade show mt-4" role="alert">
+    {{ alertMessage }}
+    <button type="button" class="btn-close" (click)="closeAlert()"></button>
+</div>
+
+<div class="banner d-flex justify-content-between align-items-center py-3">
+  <h2 class="mb-0">Produits</h2>
+  <button
+    class="btn btn-primary"
+    [routerLink]="'/create-product'">
+    <i class="fa fa-plus" aria-hidden="true"></i>
+  </button>
+</div>
+  
+<table class="table mt-4">
+  <thead>
+    <tr>
+      <th></th>
+      <th scope="col">Libellé</th>
+      <th scope="col">Référence</th>
+      <th scope="col">Description</th>
+      <th scope="col">Quantité</th>
+      <th scope="col">Prix</th>
+      <th scope="col">Action</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <tr *ngFor="let product of products">
+      <td>     
+        <img
+        [src]="product.defaultImage || 'assets/images/no-image.png'"
+        class="rounded"
+        style="max-width:300px; height: 150px; object-fit: cover;"
+        alt="{{ product.name }}"
+      />
+      
+      </td>
+      <td>{{ product.libelle }}</td>
+      <td>{{ product.reference }}</td>
+      <td>{{ product.description }}</td>
+      <td>{{ product.quantite }}</td>
+      <td>{{ product.prix }}</td>
+      <td>
+        <div class="d-flex align-items-center gap-1">
+          <button
+            class="btn btn-danger btn-sm d-flex align-items-center justify-content-center"
+            (click)="deleteData(product.id)"
+            style="width: 35px; height: 35px;"
+          >
+            <i class="fa fa-trash"></i>
+          </button>
+
+          <button
+            class="btn btn-warning btn-sm text-white d-flex align-items-center justify-content-center"
+            [routerLink]="'edit/' + product.id"
+            style="width: 35px; height: 35px;"
+          >
+            <i class="fa fa-edit"></i>
+          </button>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>

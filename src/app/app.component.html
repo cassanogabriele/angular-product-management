@@ -1,0 +1,21 @@
+<!-- Inclusion de la navbar -->
+<app-navbar></app-navbar>
+
+<div class="container">
+  <div class="alert alert-danger mt-3" role="alert">
+    ⚠ Cette application est un site de démonstration, contenant des données fictives, et ayant pour unique objectif, de présenter mes compétences en Angular.
+    (API en Laravel)
+  </div>
+  
+  <div class="row">
+    <div class="col-md-8 mx-auto">
+      <!--
+      Elément clé utilisé pour afficher des vues dynamiques en focntion de la configuration 
+      du routeur, elle représente l'emplacement où les composants liés aux routes seront chargés dans 
+      l'application. C'est une directive qui agit comme un conteneur ou un emplacment réservé dans le DOM
+      où les composants correspondant aux routes seront rendus.
+      -->
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,96 @@
+<form #productForm="ngForm" (ngSubmit)="updateProduct()">
+  <div class="form-group">
+    <label for="libelle">Libellé</label>
+    <input
+      id="libelle"
+      name="libelle"
+      [(ngModel)]="product.libelle"
+      required
+      #reference="ngModel"
+      type="text"
+      class="text form-control"
+    />
+
+    <div *ngIf="reference.invalid && reference.touched">       
+      <div  class="alert alert-danger alert-dismissible fade show mt-4" role="alert">
+          <small class="error">La référence est obligatoire.</small>
+      </div>
+    </div>
+  </div>
+  
+    <div class="form-group">
+      <label for="reference">Référence</label>
+      <input
+        id="reference"
+        name="reference"
+        [(ngModel)]="product.reference"
+        required
+        #reference="ngModel"
+        type="text"
+        class="text form-control"
+      />
+
+      <div *ngIf="reference.invalid && reference.touched">       
+        <div  class="alert alert-danger alert-dismissible fade show mt-4" role="alert">
+            <small class="error">La référence est obligatoire.</small>
+        </div>
+      </div>
+    </div>
+  
+    <div class="form-group">
+      <label for="description">Description</label>
+      <input
+        id="description"
+        name="description"
+        [(ngModel)]="product.description"
+        required
+        #description="ngModel"
+        type="text"
+        class="text form-control"
+      />
+
+      <div *ngIf="description.invalid && description.touched">
+        <div class="alert alert-danger alert-dismissible fade show mt-4" role="alert">
+            <small class="error">La description est obligatoire.</small>
+        </div>       
+      </div>
+    </div>
+  
+    <div class="form-group">
+      <label for="quantite">Quantité</label>
+      <input
+        id="quantite"
+        name="quantite"
+        [(ngModel)]="product.quantite"
+        required
+        type="number"
+        #quantite="ngModel"
+        class="text form-control"
+      />
+      <div *ngIf="quantite.invalid && quantite.touched">        
+        <div class="alert alert-danger alert-dismissible fade show mt-4" role="alert">
+            <small class="error">La quantité est obligatoire.</small>          
+        </div> 
+      </div>
+    </div>
+  
+    <div class="form-group">
+      <label for="prix">Prix</label>
+      <input
+        id="prix"
+        name="prix"
+        [(ngModel)]="product.prix"
+        required
+        type="number"
+        #prix="ngModel"
+        class="text form-control"
+      />
+      <div *ngIf="prix.invalid && prix.touched">
+        <div class="alert alert-danger alert-dismissible fade show mt-4" role="alert">
+            <small class="error">Le prix est obligatoire.</small>
+        </div>        
+      </div>
+    </div>
+  
+    <button class="btn btn-dark btn-sm mt-4"><i class="fa fa-edit"></i> Modifier</button>
+</form>   

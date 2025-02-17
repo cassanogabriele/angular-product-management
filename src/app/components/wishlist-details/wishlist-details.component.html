@@ -1,0 +1,52 @@
+<!-- Alert de succès -->
+<div *ngIf="alertVisible" class="alert alert-success alert-dismissible fade show mt-4" role="alert">
+    {{ alertMessage }}
+    <button type="button" class="btn-close" (click)="closeAlert()"></button>
+</div>
+
+<!-- Sélection de la wishlist avec un style amélioré -->
+<div class="mb-4">
+    <label for="wishlist-select" class="form-label fw-bold">📋 Sélectionnez une wishlist :</label>
+    <select id="wishlist-select" class="form-select shadow-sm p-2 mt-4" (change)="onWishlistChange($event)">
+        <option value="" disabled selected>🔽 Choisissez une liste...</option>
+        <option *ngFor="let wishlist of wishlists" [value]="wishlist.id">
+            {{ wishlist.name }}
+        </option>
+    </select>
+</div>
+
+<!-- Affichage des produits de la wishlist sélectionnée -->
+<div *ngIf="selectedWishlist" class="card shadow-lg p-3 border-0 rounded">
+    <div class="card-body">
+        <h2 class="card-title text-center text-primary">{{ selectedWishlist.name }}</h2>
+
+        <!-- Vérifie si la liste des produits est vide et affiche un message -->
+        <ul *ngIf="selectedWishlist.products.length > 0; else noProducts" class="list-group list-group-flush mt-3">
+            <li *ngFor="let product of selectedWishlist.products" class="list-group-item d-flex justify-content-between align-items-start border-bottom py-3">
+                <div class="d-flex align-items-center">
+                    <!-- Image du produit -->
+                    <img [src]="product.defaultImage" alt="{{ product.libelle }}" width="100" height="100" class="me-3 rounded">
+                    
+                    <!-- Détails du produit affichés en colonne -->
+                    <div>
+                        <span class="fw-semibold text-success d-block">{{ product.libelle }}</span>
+                        <p class="fw-semibold text-muted mb-1">{{ product.description }}</p>
+                        <p class="fw-semibold text-primary">{{ product.prix }} €</p>
+                    </div>
+                </div>
+                
+                <!-- Bouton de suppression avec icône de poubelle Font Awesome -->
+                <button class="btn btn-outline-danger btn-sm rounded-circle" (click)="removeProduct(selectedWishlist.id, product.id)">
+                    <i class="fa fa-trash"></i> <!-- Font Awesome icône poubelle -->
+                </button>
+            </li>
+        </ul>
+
+        <!-- Template lorsque la wishlist est vide -->
+        <ng-template #noProducts>
+            <div class="alert alert-warning text-center mt-3">
+                Aucun produit dans cette wishlist pour le moment.
+            </div>
+        </ng-template>
+    </div>
+</div>

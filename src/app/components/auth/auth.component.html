@@ -1,0 +1,61 @@
+
+<div class="alert alert-success alert-dismissible fade show mt-4" role="alert" *ngIf="successMessage">
+  {{ successMessage }}
+  <button type="button" class="btn-close" aria-label="Close" (click)="closeMessage()"></button>
+</div>
+
+
+<!-- Message d'erreur si les identifiants sont incorrects -->
+<div class="alert alert-danger alert-dismissible fade show mt-4" role="alert" *ngIf="alertMessage">
+  {{ alertMessage  }}
+  <button type="button" class="btn-close" aria-label="Close" (click)="closeMessage()"></button>
+</div>
+
+<div class="container">
+  <form #loginForm="ngForm" (ngSubmit)="login()">    
+    <!-- Email -->
+    <div class="form-group mt-2">
+      <label for="email">Email</label>
+      <input
+        id="email"
+        name="email"
+        [(ngModel)]="user.email"
+        required
+        #email="ngModel"
+        type="email"
+        class="form-control"
+      />
+      <div *ngIf="email.invalid && email.touched">
+        <div class="alert alert-danger alert-dismissible fade show mt-4" role="alert">
+          <small class="error">L'email est obligatoire.</small>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Mot de passe -->
+    <div class="form-group mt-2">
+      <label for="password">Mot de passe</label>
+      <input
+        id="password"
+        name="password"
+        [(ngModel)]="user.password"
+        required
+        #password="ngModel"
+        type="password"
+        class="form-control"
+      />
+      <div *ngIf="password.invalid && password.touched">
+        <div class="alert alert-danger alert-dismissible fade show mt-4" role="alert">
+          <small class="error">Le mot de passe est obligatoire.</small>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn btn-primary btn-sm mt-4"><i class="fa fa-check" aria-hidden="true"></i> Se connecter</button>
+  </form>
+
+  <div class="signup-section mt-3">
+    <span>Vous n'avez pas encore de compte ?</span>
+    <a href="/signup" class="ms-1">S'inscrire</a>
+  </div>
+</div>

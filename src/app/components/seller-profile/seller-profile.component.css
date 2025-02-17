@@ -1,0 +1,38 @@
+.seller-profile {
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+}
+  
+.seller-info {
+   max-width: 70%; /* Peut ajuster selon ton besoin */
+}
+  
+ .seller-photo img {
+   width: 150px;
+   height: 150px;
+   border-radius: 50%;
+   object-fit: cover; /* Assure-toi que l'image garde un bon ratio */
+   float: right; /* L'image flotte à droite */
+   margin-left: 20px; /* Espacement entre le texte et l'image */
+}
+
+.card {
+   height: 300px; /* Réduit la hauteur des cartes pour un look plus rectangulaire */
+   display: flex;
+   flex-direction: column;
+   overflow: hidden; /* Évite les débordements si le contenu est trop grand */
+}
+
+.card-img-top {
+   height: 120px; /* Réduit encore la hauteur de l'image pour une forme plus rectangulaire */
+   object-fit: cover; /* Permet de conserver le ratio sans déformer l'image */
+}
+
+.card-body {
+   flex: 1; /* Permet au contenu de remplir l’espace restant */
+   padding: 10px; /* Donne un peu d'espace autour du texte */
+   display: flex;
+   flex-direction: column;
+   justify-content: space-between;
+}

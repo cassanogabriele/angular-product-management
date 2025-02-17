@@ -1,0 +1,25 @@
+body {
+    display: flex;
+    justify-content: center; 
+    align-items: center;    
+    height: 100vh;           
+    background-color: #f4f4f4;}
+
+/* Style du formulaire */
+.container {
+    margin-top: 160px;
+    max-width: 500px;      
+    width: 100%;
+    padding: 30px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.forgot-password{ margin-top: 35px;  }
+
+.signup-section{ margin-top: 15px; }
+
+.successMessage{
+    margin-top: 35px;
+}
