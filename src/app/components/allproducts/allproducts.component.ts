@@ -37,6 +37,7 @@ export class AllproductsComponent implements OnInit {
     });
   } 
 
+  // Ajouter le produit à la liste de souhaits
   handleWishlistClick(productId: any): void {  
     if (!this.dataService.isLoggedIn()) {
       this.router.navigate(['/login']);
@@ -87,5 +88,10 @@ export class AllproductsComponent implements OnInit {
         console.error('Erreur lors de la récupération des infos utilisateur:', err);
       }
     );
+  }
+
+  // Ajouter un produit au panier 
+  handleAddToCart(productId: number): void {  
+   this.router.navigate(['/cart-confirmation', productId]);
   }
 }

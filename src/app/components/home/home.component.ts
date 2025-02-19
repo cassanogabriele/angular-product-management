@@ -71,7 +71,6 @@ export class HomeComponent implements OnInit {
         // Créer un objet pour regrouper les produits par catégorie
         const groupedProducts: any[] = [];
         
-        console.log(groupedProducts);
         // Utilisation de `reduce` pour regrouper les produits par `category_name`
         data.forEach((item: any) => {
           const categoryIndex = groupedProducts.findIndex(

@@ -4,6 +4,7 @@ export class Product {
     description!: string;
     quantite!: number;
     prix!: number;
+    poids!: number; 
     id_utilisateur!: number;
     category_id!: number;
     defaultImage!: File | string;

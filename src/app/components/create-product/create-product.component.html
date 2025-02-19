@@ -104,6 +104,26 @@
       </div>        
     </div>
   </div>
+
+  <div class="form-group">
+    <label for="poids">Poids (kg)</label>
+    <input
+      id="poids"
+      name="poids"
+      [(ngModel)]="product.poids"
+      required
+      type="number"
+      step="0.01"
+      #poids="ngModel"
+      class="text form-control"
+    />
+    <div *ngIf="poids.invalid && poids.touched">
+      <div class="alert alert-danger alert-dismissible fade show mt-4" role="alert">
+          <small class="error">Le poids est obligatoire.</small>
+      </div>        
+    </div>
+  </div>
+  
   
   <!-- Image par défaut -->
   <div class="form-group">

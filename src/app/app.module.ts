@@ -19,6 +19,8 @@ import { ProductDetailsComponent } from './components/productdetails/productdeta
 import { HomeComponent } from './components/home/home.component';
 import { WishlistComponent } from './components/wishlist/wishlist.component';
 import { WishlistDetailsComponent } from './components/wishlist-details/wishlist-details.component';
+import { PanierComponent } from './components/panier/panier.component';
+import { PanierConfirmationComponent } from './components/panier-confirmation/panier-confirmation.component';
 
 const appRoutes: Routes = [
   {
@@ -55,6 +57,12 @@ const appRoutes: Routes = [
     path: 'wishlist-details', component: WishlistDetailsComponent
   }, 
   {
+    path: 'cart', component: PanierComponent
+  }, 
+  {
+    path: 'cart-confirmation/:productId', component: PanierConfirmationComponent
+  }, 
+  {
      path: '', redirectTo: '/home', pathMatch: 'full' 
   },
   { 
@@ -75,7 +83,10 @@ const appRoutes: Routes = [
     AllproductsComponent,
     ProductDetailsComponent,
     HomeComponent, 
-    WishlistComponent, WishlistDetailsComponent
+    WishlistComponent, 
+    WishlistDetailsComponent, 
+    PanierComponent, 
+    PanierConfirmationComponent
   ],
   imports: [
     BrowserModule,

@@ -21,6 +21,7 @@
       <th scope="col">Description</th>
       <th scope="col">Quantité</th>
       <th scope="col">Prix</th>
+      <th scope="col">Poids</th>
       <th scope="col">Action</th>
     </tr>
   </thead>
@@ -40,7 +41,8 @@
       <td>{{ product.reference }}</td>
       <td>{{ product.description }}</td>
       <td>{{ product.quantite }}</td>
-      <td>{{ product.prix }}</td>
+      <td>{{ product.prix }} €</td>
+      <td>{{ product.poids }} g</td>
       <td>
         <div class="d-flex align-items-center gap-1">
           <button

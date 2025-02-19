@@ -1,0 +1,77 @@
+<div *ngIf="cartItems && cartItems.length > 0">
+  <table class="table">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Produit</th>
+        <th>Vendeur</th>
+        <th>Quantité</th>
+        <th style="width:250px;">Prix Unitaire</th>
+        <th>Frais de Livraison</th>
+        <th style="width:250px;">Total</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <ng-container *ngFor="let vendorGroup of cartItems">
+        <ng-container *ngFor="let item of vendorGroup.items; let i = index">
+          <tr>
+            <td>
+              <img
+                [src]="item.image_default || 'assets/images/no-image.png'"
+                class="card-img-top img-fluid"
+                style="max-width: 150px; height: auto;"
+                alt="{{ item.libelle }}"
+              />
+            </td>
+
+            <td>{{ item.libelle }}</td> 
+
+            <td [attr.rowspan]="vendorGroup.items.length">
+              {{ vendorGroup.vendeur.name }} {{ vendorGroup.vendeur.email }}
+            </td>
+
+            <td>
+              <input 
+                type="number" 
+                [(ngModel)]="item.quantite" 
+                min="1" 
+                class="form-control" 
+                (change)="updateCart(item)"
+                [value]="item.quantite"
+              />
+            </td>
+
+            <!-- Prix unitaire -->
+            <td>{{ item.prix }} €</td> 
+
+            <!-- Frais de livraison -->
+            <td>{{ item.frais_livraison }} €</td> 
+
+            <!-- Total de l'article -->
+            <td>{{ item.total_article }} €</td> 
+
+            <!-- Bouton de suppression -->
+            <td>             
+              <button class="btn btn-outline-danger btn-sm rounded-circle" (click)="removeFromCart(item.product_id)">
+                <i class="fa fa-trash"></i> 
+              </button>
+            </td>
+          </tr>
+        </ng-container>
+      </ng-container>
+    </tbody>
+  </table>
+
+  <!-- Résumé du panier -->
+  <div class="cart-summary">
+    <hr>
+    <p><strong>Total du panier:</strong> {{ total }} €</p>
+  </div>
+</div>
+
+<!-- Message si le panier est vide -->
+<div *ngIf="cartItems && cartItems.length === 0">
+  <p>Votre panier est vide.</p>
+</div>

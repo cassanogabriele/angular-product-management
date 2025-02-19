@@ -89,7 +89,7 @@ export class CreateProductComponent {
       this.productForm.form.markAllAsTouched();
     }
 
-    if (this.product.libelle && this.product.reference && this.product.description && this.product.quantite && this.product.prix && this.defaultImage) {
+    if (this.product.libelle && this.product.reference && this.product.description && this.product.quantite && this.product.prix && this.product.poids && this.defaultImage) {
       const formData = new FormData();
       formData.append('category_id', this.product.category_id.toString());  
       formData.append('libelle', this.product.libelle);
@@ -97,6 +97,7 @@ export class CreateProductComponent {
       formData.append('description', this.product.description);
       formData.append('quantite', this.product.quantite.toString());
       formData.append('prix', this.product.prix.toString());
+      formData.append('poids', this.product.poids.toString());
       formData.append('id_utilisateur', this.userId?.toString() || ''); 
       formData.append('defaultImage', this.defaultImage);
 
