@@ -6,9 +6,9 @@
         <th>Produit</th>
         <th>Vendeur</th>
         <th>Quantité</th>
-        <th style="width:250px;">Prix Unitaire</th>
+        <th>Prix Unitaire</th>
         <th>Frais de Livraison</th>
-        <th style="width:250px;">Total</th>
+        <th>Total</th>
         <th>Action</th>
       </tr>
     </thead>
@@ -19,17 +19,17 @@
           <tr>
             <td>
               <img
-                [src]="item.image_default || 'assets/images/no-image.png'"
-                class="card-img-top img-fluid"
-                style="max-width: 150px; height: auto;"
-                alt="{{ item.libelle }}"
-              />
+              [src]="item.defaultImage || 'assets/images/no-image.png'"
+              class="rounded"
+              style="max-width:100px; height: 100px; object-fit: cover;"
+              alt="{{ item.libelle }}"
+              />                 
             </td>
 
             <td>{{ item.libelle }}</td> 
 
-            <td [attr.rowspan]="vendorGroup.items.length">
-              {{ vendorGroup.vendeur.name }} {{ vendorGroup.vendeur.email }}
+            <td>
+              {{ vendorGroup.vendeur.name }} {{ vendorGroup.vendeur.firstname }}
             </td>
 
             <td>

@@ -16,8 +16,9 @@
                         <p class="card-text">{{ product.description | slice:0:100 }}...</p> 
                         <a [routerLink]="['/product', product.id]" class="btn btn-primary"  (click)="recordProduct(product.id)">Voir l'article</a>
 
-                        <div class="wishlist-icon-container d-flex justify-content-end mt-2">
+                        <div class="wishlist-icon-container d-flex justify-content-end align-items-center mt-3">
                             <i class="fa fa-solid fa-heart text-warning" aria-hidden="true" (click)="handleWishlistClick(product.id)"></i>
+                            <i class="fa fa-solid fa-shopping-cart ms-2 text-success" aria-hidden="true" (click)="handleAddToCart(product.id)"></i>
                         </div>
                     </div>
                 </div>
@@ -40,8 +41,9 @@
                         <p class="card-text">{{ product.product.description | slice:0:100 }}...</p>
                         <a [routerLink]="['/product', product.product.id]" class="btn btn-primary">Voir l'article</a>
 
-                        <div class="wishlist-icon-container d-flex justify-content-end mt-2">
+                        <div class="wishlist-icon-container d-flex justify-content-end align-items-center mt-3">
                             <i class="fa fa-solid fa-heart text-warning" aria-hidden="true" (click)="handleWishlistClick(product.id)"></i>
+                            <i class="fa fa-solid fa-shopping-cart ms-2 text-success" aria-hidden="true" (click)="handleAddToCart(product.id)"></i>
                         </div>
                     </div>
                 </div>
@@ -66,9 +68,10 @@
                             <p class="card-text">{{ product.description | slice:0:100 }}...</p>
                             <a [routerLink]="['/product', product.product_id]" class="btn btn-primary">Voir l'article</a>
 
-                            <div class="wishlist-icon-container d-flex justify-content-end mt-2">
-                                <i class="fa fa-solid fa-heart text-warning" aria-hidden="true" (click)="handleWishlistClick(product.product_id)"></i>
-                            </div>                              
+                            <div class="wishlist-icon-container d-flex justify-content-end align-items-center mt-3">
+                                <i class="fa fa-solid fa-heart text-warning" aria-hidden="true" (click)="handleWishlistClick(product.id)"></i>
+                                <i class="fa fa-solid fa-shopping-cart ms-2 text-success" aria-hidden="true" (click)="handleAddToCart(product.id)"></i>
+                            </div>                           
                         </div>
                     </div>
                 </div>

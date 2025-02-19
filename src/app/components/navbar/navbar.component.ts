@@ -11,6 +11,9 @@ export class NavbarComponent implements OnInit {
   isLoggedIn: boolean = false;
   categories: any[] = [];
   alertMessage: string = '';
+  userInfo: any;
+  userId: any;
+  cartItems: any[] = [];
 
   constructor(
     private dataService: DataService,   
@@ -27,6 +30,8 @@ export class NavbarComponent implements OnInit {
     this.dataService.getCategories().subscribe((data: any) => {
       this.categories = data; 
     });
+
+    this.getCartItems();
   }
 
   // Lorsque l'utilisateur change de catégorie
@@ -40,4 +45,18 @@ export class NavbarComponent implements OnInit {
     sessionStorage.setItem('alertMessage', 'Vous êtes déconnecté.');
     this.router.navigate(['/login']);
   }
+
+  getCartItems(): void {
+    this.dataService.getUserInfo().subscribe(
+      (data: any) => {
+        this.userId = data.id;
+  
+        this.dataService.getCart(this.userId).subscribe(response => {       
+          this.cartItems = response.cartItems && Object.keys(response.cartItems).length > 0;       
+        });
+      },
+      (err) => console.error('Erreur lors de la récupération des infos utilisateur:', err)
+    );
+  } 
+  
 }

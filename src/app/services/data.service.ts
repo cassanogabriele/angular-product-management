@@ -73,8 +73,8 @@ export class DataService {
   }
 
   insertData(formData: FormData): Observable<any> {
-    // return this.httpClient.post('http://127.0.0.1:8000/api/addProduct', formData);
-    return this.httpClient.post('http://productmanagement.gabriel-cassano.be/api/addProduct', formData);
+    return this.httpClient.post('http://127.0.0.1:8000/api/addProduct', formData);
+    // return this.httpClient.post('http://productmanagement.gabriel-cassano.be/api/addProduct', formData);
   }  
   
   deleteData(id:any){
@@ -129,7 +129,7 @@ export class DataService {
     });
     */
 
-    return this.httpClient.post('`http://productmanagement.gabriel-cassano.be/api/createWishlist', {
+    return this.httpClient.post('http://productmanagement.gabriel-cassano.be/api/createWishlist', {
       userId: userId,
       name: wishlistName,
       productId: productId  
@@ -145,17 +145,17 @@ export class DataService {
       productId: productId
     });
     */
-   
+
     return this.httpClient.post(`http://productmanagement.gabriel-cassano.be/api/addProductToWishlist`, {
       userId: userId,
       wishlistId: wishlistId,
       productId: productId
-    });   
+    });    
   }
   
 
   removeProductFromWishlist(wishlistId: any, productId: any): Observable<any> {
-    // return this.httpClient.delete(`http://127.0.0.1:8000/api/removeProductFromWishlist/${wishlistId}/${productId}`);
+    //return this.httpClient.delete(`http://127.0.0.1:8000/api/removeProductFromWishlist/${wishlistId}/${productId}`);
     return this.httpClient.delete(`http://productmanagement.gabriel-cassano.be/${wishlistId}/${productId}`);
   }  
 
@@ -163,9 +163,6 @@ export class DataService {
   
   // Ajouter un produit au panier
   addToCart(productId: number, quantite: number, userId: any): Observable<any> {
-    alert(productId);
-    // Correction de l'URL et utilisation de la méthode POST
-
     /*
     return this.httpClient.post(`http://127.0.0.1:8000/api/addProductToCart`, { 
       userId: userId,
@@ -177,7 +174,7 @@ export class DataService {
     return this.httpClient.post(`http://productmanagement.gabriel-cassano.be/api/addProductToCart`, { 
       product_id: productId, 
       quantite 
-    });    
+    });
   }
   
   // Récuper les informations du panier
@@ -195,7 +192,7 @@ export class DataService {
 
   // Supprimer un produit du panier
   removeFromCart(productId: number, userId: number): Observable<any> {
-    //  return this.httpClient.delete(`http://127.0.0.1:8000/api/cart/${userId}/${productId}`);
+    // return this.httpClient.delete(`http://127.0.0.1:8000/api/cart/${userId}/${productId}`);
     return this.httpClient.delete(`http://productmanagement.gabriel-cassano.be/api/cart/${userId}/${productId}`);
   }  
 

@@ -27,15 +27,15 @@ export class PanierComponent {
         this.userId = this.userInfo.id;
   
         // Récupérer les articles du panier pour cet utilisateur
-        this.dataService.getCart(this.userId).subscribe(response => {
-          console.log(this.cartItems);
+        this.dataService.getCart(this.userId).subscribe(response => {      
           // Convertir l'objet cartItems en un tableau
           this.cartItems = Object.keys(response.cartItems).map(vendorId => ({
             vendeur: response.cartItems[vendorId].vendeur,
             items: response.cartItems[vendorId].items
           }));
+
+          console.log(this.cartItems);
   
-          console.log('Cart items:', this.cartItems);
           this.total = response.total;
         });
       },
@@ -43,8 +43,7 @@ export class PanierComponent {
         console.error('Erreur lors de la récupération des infos utilisateur:', err);
       }
     );
-  }  
-  
+  }    
 
   // Supprimer un article du panier en utilisant l'ID du produit et l'ID de l'utilisateur
   removeFromCart(productId: number): void {

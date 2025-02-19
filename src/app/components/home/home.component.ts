@@ -91,7 +91,6 @@ export class HomeComponent implements OnInit {
   
         // Assignation du tableau regroupé à la variable `limitedProducts`
         this.limitedProducts = groupedProducts;
-        console.log(this.limitedProducts);  // Pour vérifier
       },
       (error) => {
         console.error('Erreur lors de la récupération des produits par catégorie:', error);
@@ -122,5 +121,10 @@ export class HomeComponent implements OnInit {
     } else {
       this.router.navigate(['/wishlist', productId]);
     }   
-  }    
+  }   
+  
+   // Ajouter un produit au panier 
+   handleAddToCart(productId: number): void {  
+    this.router.navigate(['/cart-confirmation', productId]);
+   }
 }

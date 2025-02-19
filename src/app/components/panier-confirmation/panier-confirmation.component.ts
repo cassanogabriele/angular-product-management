@@ -31,7 +31,7 @@ export class PanierConfirmationComponent implements OnInit {
     }
   }
 
-  // ✅ Fonction pour récupérer les détails du produit
+  //  Récupérer les détails du produit
   getProductDetails(): void {
     this.dataService.getProductById(this.productId).subscribe(
       (res) => {
@@ -52,7 +52,7 @@ export class PanierConfirmationComponent implements OnInit {
 
         this.dataService.addToCart(this.productId, this.quantite, this.userId).subscribe(
           () => {
-            alert('Produit ajouté au panier avec succès !');
+           
             this.router.navigate(['/cart']);
           },
           (err) => {

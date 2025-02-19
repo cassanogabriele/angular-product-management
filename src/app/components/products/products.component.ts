@@ -70,6 +70,8 @@ export class ProductsComponent implements OnInit {
         this.dataService.getData(this.userInfo.id).subscribe(res => {
           this.products = res;
 
+          console.log(this.products);
+
         }, error => {
           console.error('Erreur lors de la récupération des produits', error);
         });
