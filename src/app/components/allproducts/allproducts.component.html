@@ -19,15 +19,25 @@
             />
           </div>
           <div class="card-body mt-2">
-            <h5 class="card-title fw-bold">{{ product.libelle }}</h5>
+            <h5 class="card-title fw-bold" (click)="viewProductDetails(product.id)">{{ product.libelle }}</h5>
             <h6 class="card-title">Référence : {{ product.reference }}</h6>
             <p class="card-text">
               Description : {{ product.description | slice: 0:50 }}...
             </p>
+            
+            <p *ngIf="isLoggedIn"><strong>Vendu par :</strong>
+              <a [routerLink]="['/seller-profile', product.user.id]" class="text-success">
+                {{ product.user.name }} {{ product.user.firstname }}
+              </a>
+            </p>    
+            
+            <p *ngIf="!isLoggedIn"><strong>Vendu par :</strong>
+               <span class="text-success"> {{ product.user.name }} {{ product.user.firstname }}</span>
+            </p>
 
             <div class="wishlist-icon-container d-flex justify-content-end align-items-center">
               <i class="fa fa-solid fa-heart text-warning" aria-hidden="true" (click)="handleWishlistClick(product.id)"></i>
-              <i class="fa fa-solid fa-shopping-cart ms-2 text-success" aria-hidden="true" (click)="handleAddToCart(product.id)"></i>
+              <i class="fa fa-solid fa-shopping-cart ms-2 text-info" aria-hidden="true" (click)="handleAddToCart(product.id)"></i>
             </div>            
           </div>
         </div>

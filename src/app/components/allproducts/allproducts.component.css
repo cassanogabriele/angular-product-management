@@ -1,5 +1,6 @@
 .card {
     transition: transform 0.2s ease-in-out;
+    width:300px;
 }
 
 .card:hover {
@@ -40,3 +41,6 @@
     object-fit: cover;         /* Recadre l'image pour remplir le conteneur */
   }
   
+ a {
+    text-decoration: none;
+}

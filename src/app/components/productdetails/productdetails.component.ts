@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { DataService } from 'src/app/services/data.service';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-product-details',
@@ -9,10 +9,12 @@ import { DataService } from 'src/app/services/data.service';
 })
 export class ProductDetailsComponent implements OnInit {
   product: any;
+  isLoggedIn: boolean = false;
 
   constructor(
     private route: ActivatedRoute,
-    private dataService: DataService
+    private dataService: DataService,
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -28,5 +30,24 @@ export class ProductDetailsComponent implements OnInit {
         }
       );
     }
+    
+    this.dataService.loggedIn$.subscribe((loggedIn: boolean) => {
+      this.isLoggedIn = loggedIn;
+    });
   }
+
+  // Ajouter un produit au panier 
+  handleAddToCart(productId: number): void {  
+    this.router.navigate(['/cart-confirmation', productId]);
+  }
+
+    // Ajouter le produit à la liste de souhaits
+  handleWishlistClick(productId: any): void {  
+    if (!this.dataService.isLoggedIn()) {
+      this.router.navigate(['/login']);
+    } else {
+      this.router.navigate(['/wishlist', productId]);
+    }   
+  }    
+
 }

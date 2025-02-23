@@ -12,13 +12,21 @@ export class DataService {
   private loggedInSubject = new BehaviorSubject<boolean>(this.isLoggedIn());
   public loggedIn$ = this.loggedInSubject.asObservable();
 
+  private totalItemsSubject = new BehaviorSubject<number>(0);
+  public totalItems$ = this.totalItemsSubject.asObservable();
+
   constructor(private httpClient: HttpClient) { }
+
+  // Mettre à jour le nombre d'article dans la navbar quand on se connecte
+  updateTotalItems(count: number) {  
+    this.totalItemsSubject.next(count);
+  }  
 
   // Les utilisateurs 
 
   // Créer un compte
   insertUser(data: FormData): Observable<any> {
-    // return this.httpClient.post('http://127.0.0.1:8000/api/register', data, {responseType: 'text'});
+   // return this.httpClient.post('http://127.0.0.1:8000/api/register', data, {responseType: 'text'});
     return this.httpClient.post('http://productmanagement.gabriel-cassano.be/api/register', data);
   }
 
@@ -73,8 +81,8 @@ export class DataService {
   }
 
   insertData(formData: FormData): Observable<any> {
-    return this.httpClient.post('http://127.0.0.1:8000/api/addProduct', formData);
-    // return this.httpClient.post('http://productmanagement.gabriel-cassano.be/api/addProduct', formData);
+    // return this.httpClient.post('http://127.0.0.1:8000/api/addProduct', formData);
+    return this.httpClient.post('http://productmanagement.gabriel-cassano.be/api/addProduct', formData);
   }  
   
   deleteData(id:any){
@@ -86,7 +94,7 @@ export class DataService {
 
   // Récupérer les catégories des produits
   getCategories() {
-    // return this.httpClient.get('http://localhost:8000/api/categories'); 
+    // return this.httpClient.get('http://127.0.0.1:8000/api/categories'); 
     return this.httpClient.get('http://productmanagement.gabriel-cassano.be/api/categories'); 
   }    
 
@@ -151,11 +159,10 @@ export class DataService {
       wishlistId: wishlistId,
       productId: productId
     });    
-  }
-  
+  }  
 
   removeProductFromWishlist(wishlistId: any, productId: any): Observable<any> {
-    //return this.httpClient.delete(`http://127.0.0.1:8000/api/removeProductFromWishlist/${wishlistId}/${productId}`);
+    //  return this.httpClient.delete(`http://127.0.0.1:8000/api/removeProductFromWishlist/${wishlistId}/${productId}`);
     return this.httpClient.delete(`http://productmanagement.gabriel-cassano.be/${wishlistId}/${productId}`);
   }  
 
@@ -187,7 +194,7 @@ export class DataService {
 
     return this.httpClient.get(`http://productmanagement.gabriel-cassano.be/api/cart`, {
       params: { userId: userId }
-    });
+    });    
   }
 
   // Supprimer un produit du panier

@@ -18,6 +18,7 @@ export class AllproductsComponent implements OnInit {
   showWishlistSelect: boolean = false;
   product: any;   
   wishlists: any;
+  isLoggedIn: boolean = false;
 
   constructor(
     private dataService: DataService,
@@ -29,11 +30,16 @@ export class AllproductsComponent implements OnInit {
   ngOnInit(): void {
     this.route.paramMap.subscribe(params => {
       const categoryIdParam = params.get('categoryId');
+
       if (categoryIdParam) {
         this.categoryId = +categoryIdParam;
         this.getCategoryTitle(this.categoryId); 
         this.getProductsByCategory(this.categoryId);
       }
+    });
+
+    this.dataService.loggedIn$.subscribe((loggedIn: boolean) => {
+      this.isLoggedIn = loggedIn;
     });
   } 
 
@@ -51,7 +57,7 @@ export class AllproductsComponent implements OnInit {
     return new Array(remaining).fill(null);
   }
 
-  getProductsByCategory(categoryId: number): void {
+  getProductsByCategory(categoryId: number): void {  
     this.dataService.getProductsByCategory(categoryId).subscribe(
       (res) => {
         this.products = res;
@@ -75,19 +81,23 @@ export class AllproductsComponent implements OnInit {
   }
 
   viewProductDetails(productId: number): void {
-    this.dataService.getUserInfo().subscribe(
-      (data: any) => {
-        this.userInfo = data;
-        this.userId = this.userInfo.id;
-
-        this.productService.recordViewedProduct(productId, this.userId).subscribe(() => {
-          this.router.navigate(['/wishlist', productId]);
-        });
-      },
-      (err) => {
-        console.error('Erreur lors de la récupération des infos utilisateur:', err);
-      }
-    );
+    if (this.dataService.isLoggedIn()) {
+      this.dataService.getUserInfo().subscribe(
+        (data: any) => {
+          this.userInfo = data;
+          this.userId = this.userInfo.id;
+  
+          this.productService.recordViewedProduct(productId, this.userId).subscribe(() => {
+            this.router.navigate([`/product/${productId}`]);
+          });
+        },
+        (err) => {
+          console.error('Erreur lors de la récupération des infos utilisateur:', err);
+        }
+      );
+    } else {
+      this.router.navigate([`/product/${productId}`]);
+    } 
   }
 
   // Ajouter un produit au panier 

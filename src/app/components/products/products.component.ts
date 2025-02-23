@@ -69,9 +69,6 @@ export class ProductsComponent implements OnInit {
         // Passer l'ID de l'utilisateur à la méthode getData()
         this.dataService.getData(this.userInfo.id).subscribe(res => {
           this.products = res;
-
-          console.log(this.products);
-
         }, error => {
           console.error('Erreur lors de la récupération des produits', error);
         });
