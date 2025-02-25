@@ -2,6 +2,7 @@ import { Component, ViewChild, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { DataService } from 'src/app/services/data.service';
 import { Router } from '@angular/router';
+import { ProductService } from 'src/app/services/product.service';
 
 @Component({
   selector: 'app-auth',
@@ -29,7 +30,8 @@ export class AuthComponent implements OnInit {
 
   constructor(
     private dataService: DataService,
-    private router: Router
+    private router: Router,
+    private productService: ProductService 
   ) {}
 
   ngOnInit(): void {
@@ -75,8 +77,31 @@ export class AuthComponent implements OnInit {
             // Mettre à jour le nombre d'article dans la navigation 
             this.getCartItems();
 
-            // Synchroniser le panier local avec la base de données après la connexion
-            this.syncLocalCartWithDb();
+            this.dataService.getUserInfo().subscribe(
+              (data: any) => {
+                this.userInfo = data;
+                this.userId = this.userInfo.id;
+
+                // Récupérer les produits vus stockés dans localStorage
+                const viewedProducts = JSON.parse(localStorage.getItem('recentlyViewed') || '[]');
+        
+                if (viewedProducts.length > 0) {
+                  viewedProducts.forEach((product: any) => {
+                    this.productService.recordViewedProduct(product.id, this.userId).subscribe(
+                      () => {
+                        console.log(`Produit ${product.id} enregistré pour l'utilisateur ${this.userId}`);
+                      },
+                      (error) => {
+                        console.error(`Erreur enregistrement produit ${product.id}:`, error);
+                      }
+                    );
+                  });
+                }
+              },
+              (err) => {
+                console.error('Erreur lors de la récupération des infos utilisateur:', err);
+              }
+            );
 
             // Rediriger vers le profil
             this.router.navigate(['/home']);

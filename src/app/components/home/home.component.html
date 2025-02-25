@@ -27,7 +27,8 @@
     </div>
 </section>
 
-<section id="section1" class="py-5 bg-light" *ngIf="recentlyViewedProducts.length > 0">
+<!-- Produits récemment db (utilisateur non connecté) -->
+<section id="section1" class="py-5 bg-light" *ngIf="isLoggedIn && recentlyViewedProducts.length > 0">
     <div class="container">
         <h2 class="mb-4 text-warning">Produits récemment vus</h2>
 
@@ -40,6 +41,32 @@
                         <h5 class="card-title text-center fw-bold">{{ product.product.libelle }}</h5>
                         <p class="card-text">{{ product.product.description | slice:0:100 }}...</p>
                         <a [routerLink]="['/product', product.product.id]" class="btn btn-primary">Voir l'article</a>
+
+                        <div class="wishlist-icon-container d-flex justify-content-end align-items-center mt-3">
+                            <i class="fa fa-solid fa-heart text-warning" aria-hidden="true" (click)="handleWishlistClick(product.id)"></i>
+                            <i class="fa fa-solid fa-shopping-cart ms-2 text-success" aria-hidden="true" (click)="handleAddToCart(product.id)"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- Produits récemment locaux (utilisateur non connecté) -->
+<section id="section1" class="py-5 bg-light" *ngIf="!isLoggedIn && localRecentlyViewedProducts.length > 0">
+    <div class="container">
+        <h2 class="mb-4 text-warning">Produits récemment vus</h2>
+
+        <div class="row g-4">
+            <div class="col-md-4" *ngFor="let product of localRecentlyViewedProducts">
+                <div class="card h-100">
+                    <img [src]="product.defaultImage" class="card-img-top" alt="{{ product.libelle }}">
+                    <div class="card-body">
+                        <h5 class="card-title text-center fw-bold">{{ product.libelle }}</h5>
+                        <p class="card-text">{{ product.description | slice:0:100 }}...</p>
+                        <a [routerLink]="['/product', product.id]" class="btn btn-primary">Voir l'article</a>
 
                         <div class="wishlist-icon-container d-flex justify-content-end align-items-center mt-3">
                             <i class="fa fa-solid fa-heart text-warning" aria-hidden="true" (click)="handleWishlistClick(product.id)"></i>

@@ -11,10 +11,12 @@ import { Router, ActivatedRoute } from '@angular/router';
 export class HomeComponent implements OnInit {
   recentProducts: any[] = [];
   recentlyViewedProducts: any[] = [];
+  localRecentlyViewedProducts: any[] = [];
   limitedProducts: any[] = [];  // Catégories avec produits (format que l'API renvoie)
   userInfo: any;
   userId: any;
   successMessage: string | null = null;
+  isLoggedIn: boolean = false;
 
   constructor(
     private dataService: DataService,
@@ -29,6 +31,11 @@ export class HomeComponent implements OnInit {
 
     // Supprimer le message après l'avoir récupéré
     sessionStorage.removeItem('userLoginSuccessMessage');
+
+    // S'abonner à l'état de connexion
+    this.dataService.loggedIn$.subscribe((loggedIn: boolean) => {
+      this.isLoggedIn = loggedIn;
+    });
 
 
     this.loadRecentProducts();
@@ -48,21 +55,25 @@ export class HomeComponent implements OnInit {
   }
 
   loadRecentlyViewedProducts(): void {
-    this.dataService.getUserInfo().subscribe(
-      (data: any) => {
-        this.userInfo = data;
-        this.userId = this.userInfo.id;
-
-        this.productService.getRecentlyViewedProducts(this.userId).subscribe(
-          (data: any) => {
-            this.recentlyViewedProducts = data;  
-          },
-          (error) => {
-            console.error('Erreur lors de la récupération des produits', error);
-          }
-        );
-      },
-    );   
+    if (this.dataService.isLoggedIn()) { 
+      this.dataService.getUserInfo().subscribe(
+        (data: any) => {
+          this.userInfo = data;
+          this.userId = this.userInfo.id;
+  
+          this.productService.getRecentlyViewedProducts(this.userId).subscribe(
+            (data: any) => {
+              this.recentlyViewedProducts = data;  
+            },
+            (error) => {
+              console.error('Erreur lors de la récupération des produits', error);
+            }
+          );
+        },
+      );   
+    } else {      
+      this.localRecentlyViewedProducts = JSON.parse(localStorage.getItem('recentlyViewed') || '[]');
+    }      
   }
 
   loadProductsByCategory(): void {

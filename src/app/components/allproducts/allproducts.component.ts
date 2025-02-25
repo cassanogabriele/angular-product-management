@@ -96,6 +96,31 @@ export class AllproductsComponent implements OnInit {
         }
       );
     } else {
+      let viewedProducts = JSON.parse(localStorage.getItem('recentlyViewed') || '[]');
+
+      // Vérifier si l'article existe déjà pour éviter les doublons
+      const existingIndex = viewedProducts.findIndex((item: any) => item.id === productId);
+
+      if (existingIndex === -1) {
+        this.dataService.getProductById(productId).subscribe(
+          (res) => {
+            this.product = res;
+            viewedProducts.push(this.product);
+
+            // Limiter à un certain nombre d'articles (ex: max 10 articles)
+            if (viewedProducts.length > 10) {
+              viewedProducts.shift(); // Supprime le plus ancien
+            }
+
+            // Sauvegarder dans localStorage
+            localStorage.setItem('recentlyViewed', JSON.stringify(viewedProducts));
+          },
+          (err) => {
+            console.error('Erreur lors de la récupération des détails du produit:', err);
+          }
+        );        
+      }   
+
       this.router.navigate([`/product/${productId}`]);
     } 
   }
