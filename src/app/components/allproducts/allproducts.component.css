@@ -3,6 +3,10 @@
     width:300px;
 }
 
+.row {
+    gap: 40px;
+}
+  
 .card:hover {
     transform: scale(1.05);
 }

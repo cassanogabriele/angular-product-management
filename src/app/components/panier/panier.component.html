@@ -6,7 +6,7 @@
         <th>Produit</th>
         <th>Quantité</th>
         <th>Prix Unitaire</th>
-        <th>Frais de Livraison</th>
+        <th *ngIf="isLoggedIn">Frais de Livraison</th>
         <th>Total</th>
         <th>Action</th>
       </tr>
@@ -40,7 +40,7 @@
               </td>
 
               <td>{{ item.prix }} €</td> 
-              <td>{{ item.frais_livraison }} €</td> 
+              <td *ngIf="isLoggedIn">{{ item.frais_livraison }} €</td> 
               <td>{{ (item.prix * item.quantite) }} €</td> 
 
               <td>             

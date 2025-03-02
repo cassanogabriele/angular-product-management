@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { DataService } from 'src/app/services/data.service'; // Ton service pour récupérer les catégories
+import { DataService } from 'src/app/services/data.service'; 
 
 @Component({
   selector: 'app-navbar',
@@ -28,21 +28,55 @@ export class NavbarComponent implements OnInit {
     this.dataService.loggedIn$.subscribe((loggedIn: boolean) => {
       this.isLoggedIn = loggedIn;
     });
-
-    this.dataService.totalItems$.subscribe((count: number) => {
-      this.totalItems = count;
-    });
-
+   
     // Récupérer les catégories
     this.dataService.getCategories().subscribe((data: any) => {
       this.categories = data; 
     });
 
+    // Si on est connecté, on récupère le panier en db, sinon, on récupère le panier local
     if (this.isLoggedIn) {
       this.getCartItems();
+
+      // S'abonner au compteur d'articles le mettre dans l'affichage
+      this.dataService.totalItems$.subscribe((count: number) => {
+        this.totalItems = count;
+      });
+
+      // Mettre à jour l'aperçu du panier 
+      this.dataService.userId$.subscribe(userId => {
+        if (userId) {
+          this.userId = userId;
+          this.dataService.refreshCartPreview(userId); 
+        }
+      });    
+  
+      // S'abonner pour mettre à jour l'affichage de l'aperçu du panier 
+      this.dataService.cartPreview$.subscribe((cartItems: any) => {    
+        try {
+          // Convertir l'objet cartItems en tableau
+          this.cartItems = Object.entries(cartItems).map(([vendorId, vendorData]: [string, any]) => ({
+            vendeur: vendorData.vendeur,
+            items: vendorData.items
+          }));
+        } catch (error) {
+          console.error("Erreur lors de la mise à jour du panier :", error);
+        }
+      });
+
+      // S'abonner pour mettre à jour le total du panier 
+      this.dataService.totalCartPreview$.subscribe((total: number) => {
+        this.total = total;
+      });
     } else {
       this.getLocalCartItems();
+
+      this.dataService.localcartPreview$.subscribe(cartItems => {
+        this.cartItems = cartItems;
+      });
     }
+    
+    this.getCartItemsPreview();
   }
 
   // Lorsque l'utilisateur change de catégorie
@@ -93,9 +127,81 @@ export class NavbarComponent implements OnInit {
       this.cartItems = JSON.parse(localCart);  
 
       // Calculer le nombre total d'articles dans le panier local
-      this.totalItems = this.cartItems.reduce((sum: number, item: any) => 
-        sum + item.quantite, 0
-      );
+      this.totalItems = this.cartItems.length;
+      console.log(this.totalItems);
     }
   }  
+  
+  getCartItemsPreview(): void {
+    if (this.isLoggedIn) { 
+      this.dataService.getUserInfo().subscribe(
+        (data: any) => {
+          this.userInfo = data;
+          this.userId = this.userInfo.id;
+    
+          // Récupérer les articles du panier pour cet utilisateur
+          this.dataService.getCartPreview(this.userId).subscribe(response => {
+            // S'assurer que cartItems existe bien dans la réponse
+            if (response.cartItems) {
+              // Convertir l'objet cartItems en un tableau
+              this.cartItems = Object.keys(response.cartItems).map(vendorId => ({
+                vendeur: response.cartItems[vendorId].vendeur,
+                items: response.cartItems[vendorId].items
+              }));
+    
+              this.total = response.total.toFixed(2);
+              this.totalItems = response.uniqueProductCount || 0;  
+            } else {
+              console.error("cartItems est vide ou mal formaté", response);
+            }
+          });
+        },
+        (err) => {
+          console.error('Erreur lors de la récupération des infos utilisateur:', err);
+        }
+      );
+    } else {
+      // Aperçu du panier local
+      const localCart = sessionStorage.getItem('cart');
+
+      if (localCart) {
+        this.cartItems = JSON.parse(localCart);
+        
+        this.total = 0;
+        let itemCount = 0; 
+
+        // Parcourir les articles du panier
+        for (let i = 0; i < this.cartItems.length && itemCount < 3; i++) { // Limiter à 3 articles
+          const item = this.cartItems[i];
+
+          // Vérifier que item.product existe avant de l'utiliser
+          if (item.product) {
+            // Pousser les données correctement dans cartItems avec la structure attendue
+            this.cartItems.push({
+              vendeur: item.product.libelle, 
+              items: [{
+                productId: item.productId,
+                libelle: item.product.libelle,
+                quantite: item.quantite,
+                prix: item.product.prix,
+                poids: item.product.poids,
+                defaultImage: item.product.defaultImage
+              }]
+            });
+
+            // Calcul du total
+            this.total += item.product.prix * item.quantite;  
+            this.total.toFixed(2);          
+          
+            // Incrémenter le compteur d'articles
+            itemCount++;
+          } else {
+            console.warn(`Produit manquant pour l'item avec productId: ${item.productId}`);
+          }
+        }
+      } else {
+        console.log('Aucun article dans le panier local');
+      } 
+    } 
+  }    
 }

@@ -37,7 +37,6 @@ export class HomeComponent implements OnInit {
       this.isLoggedIn = loggedIn;
     });
 
-
     this.loadRecentProducts();
     this.loadRecentlyViewedProducts();
     this.loadProductsByCategory();

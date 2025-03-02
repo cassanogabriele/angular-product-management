@@ -74,9 +74,6 @@ export class AuthComponent implements OnInit {
             // Message de succès
             sessionStorage.setItem('userLoginSuccessMessage', 'Vous êtes connectés !');
 
-            // Mettre à jour le nombre d'article dans la navigation 
-            this.getCartItems();
-
             this.dataService.getUserInfo().subscribe(
               (data: any) => {
                 this.userInfo = data;
@@ -87,24 +84,17 @@ export class AuthComponent implements OnInit {
         
                 if (viewedProducts.length > 0) {
                   viewedProducts.forEach((product: any) => {
-                    this.productService.recordViewedProduct(product.id, this.userId).subscribe(
-                      () => {
-                        console.log(`Produit ${product.id} enregistré pour l'utilisateur ${this.userId}`);
-                      },
-                      (error) => {
-                        console.error(`Erreur enregistrement produit ${product.id}:`, error);
-                      }
-                    );
+                    this.productService.recordViewedProduct(product.id, this.userId).subscribe();
                   });
                 }
+
+                // Enregistrer le panier local dans la db 
+                this.syncLocalCartWithDb();                
               },
               (err) => {
                 console.error('Erreur lors de la récupération des infos utilisateur:', err);
               }
-            );
-
-            // Rediriger vers le profil
-            this.router.navigate(['/home']);
+            );                   
           }
         },
         (err) => {
@@ -158,11 +148,12 @@ export class AuthComponent implements OnInit {
     } 
   }  
 
-  // Enreigistrement du panier local 
+  // Enregistrement du panier local 
   syncLocalCartWithDb(): void {
     let localCart = JSON.parse(sessionStorage.getItem('cart') || '[]');
 
     if (localCart.length === 0) {
+        console.log('Panier local vide, rien à synchroniser.');
         return; // Pas besoin de synchronisation si le panier est vide
     }
 
@@ -173,29 +164,71 @@ export class AuthComponent implements OnInit {
         return;
     }
 
+    // Récupérer le panier actuel de l'utilisateur avant de mettre à jour
+    console.log("Récupération du panier actuel pour l'utilisateur avec ID:", userId);
     this.dataService.getCart(userId).subscribe(
         (response: any) => {
+            console.log("Réponse initiale du panier:", response);
+
             // Assurez-vous que cartItems est un tableau
             const cartItemsArray = Array.isArray(response.cartItems)
                 ? response.cartItems
                 : Object.values(response.cartItems || {});
+            
+            console.log("Cart Items Array après récupération de l'API:", cartItemsArray);
 
-            console.log('Cart Items:', cartItemsArray);
-
+            // Synchronisation du panier local avec les éléments du panier dans la base de données
             localCart.forEach((cartItem: any) => {
                 const existingItem = cartItemsArray.find((item: any) => item.productId === cartItem.productId);
 
                 if (existingItem) {
-                    console.log(`Mise à jour de l'article ${cartItem.productId}`);
-                    this.dataService.updateCartItem(cartItem.productId, cartItem.quantite, userId).subscribe();
+                    console.log(`Mise à jour de l'élément: ${cartItem.productId} avec la quantité: ${cartItem.quantite}`);
+                    this.dataService.updateCartItem(cartItem.productId, cartItem.quantite, userId).subscribe(
+                        () => console.log(`Panier mis à jour pour le produit ${cartItem.productId}`),
+                        (err) => console.error('Erreur lors de la mise à jour de l\'élément:', err)
+                    );
                 } else {
-                    console.log(`Ajout de l'article ${cartItem.productId}`);
-                    this.dataService.addToCart(cartItem.productId, cartItem.quantite, userId).subscribe();
+                    console.log(`Ajout du produit ${cartItem.productId} avec quantité: ${cartItem.quantite}`);
+                    this.dataService.addToCart(cartItem.productId, cartItem.quantite, userId).subscribe(
+                        () => console.log(`Produit ${cartItem.productId} ajouté au panier`),
+                        (err) => console.error('Erreur lors de l\'ajout de l\'élément:', err)
+                    );
                 }
             });
 
+            // Une fois la synchronisation terminée, on récupère à nouveau le panier pour s'assurer qu'il est mis à jour
+            console.log("Récupération du panier après synchronisation...");
+            this.dataService.getCart(userId).subscribe(
+                (updatedCartResponse: any) => {
+                    console.log("Panier mis à jour après synchronisation:", updatedCartResponse);
+
+                    if (updatedCartResponse.cartItems) {
+                        // Mettre à jour les éléments du panier de l'utilisateur avec la version mise à jour
+                        this.cartItems = Object.keys(updatedCartResponse.cartItems).map(vendorId => ({
+                            vendeur: updatedCartResponse.cartItems[vendorId].vendeur,
+                            items: updatedCartResponse.cartItems[vendorId].items
+                        }));
+
+                        this.totalItems = updatedCartResponse.uniqueProductCount || 0;
+
+                        // Mettre à jour le compteur du nombre d'articles dans la navbar
+                        this.dataService.updateTotalItems(this.totalItems);
+                        // Mettre à jour l'aperçu du panier dans la navbar
+                        this.dataService.refreshCartPreview(userId);
+                    }
+                },
+                (err) => {
+                    console.error('Erreur lors de la récupération du panier mis à jour:', err);
+                }
+            );
+
             // Une fois la synchronisation terminée, vider le panier local
             sessionStorage.removeItem('cart');
+
+            // Rafraîchir la page après la synchronisation du panier
+            setTimeout(() => {
+                location.reload(); // Rafraîchit la page pour mettre à jour les données affichées
+            }, 1000); // Délai de 1 seconde avant le rafraîchissement (ajuste le délai selon tes besoins)
         },
         (err) => console.error('Erreur lors de la récupération du panier de l\'utilisateur:', err)
     );

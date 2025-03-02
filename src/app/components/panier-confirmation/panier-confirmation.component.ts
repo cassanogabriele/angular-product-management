@@ -12,7 +12,7 @@ export class PanierConfirmationComponent implements OnInit {
   quantite: number = 1;
   productId: number = 0; 
   userInfo: any;
-  userId: any;
+  userId: number | null = null;
   isLoggedIn: boolean = false;
   totalItems: number = 0; 
   cartItems: any[] = [];
@@ -24,9 +24,8 @@ export class PanierConfirmationComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Récupération et conversion correcte de l'ID du produit
+    // Récupération de l'ID du produit depuis l'URL
     const productIdParam = this.activatedRoute.snapshot.paramMap.get('productId');
-
     if (productIdParam) {
       this.productId = Number(productIdParam);
       this.getProductDetails();
@@ -34,13 +33,22 @@ export class PanierConfirmationComponent implements OnInit {
       console.error("ID du produit invalide.");
     }
 
-    // Vérifier si l'utilisateur est connecté pour ajouter au panier local ou au pannier en db
+    // Vérification de la connexion de l'utilisateur
     this.dataService.loggedIn$.subscribe((loggedIn: boolean) => {
       this.isLoggedIn = loggedIn;
+      if (this.isLoggedIn) {
+        this.dataService.getUserInfo().subscribe((data: any) => {
+          this.userInfo = data;
+          this.userId = data.id;
+          this.getCartItems(); // Charger le panier de l'utilisateur connecté
+        });
+      } else {
+        this.getLocalCartItems(); // Charger le panier local si non connecté
+      }
     });
   }
 
-  //  Récupérer les détails du produit
+  // Récupérer les détails du produit
   getProductDetails(): void {
     this.dataService.getProductById(this.productId).subscribe(
       (res) => {
@@ -52,121 +60,96 @@ export class PanierConfirmationComponent implements OnInit {
     );
   }
 
-  // Ajouter au panier avec la quantité sélectionnée
+  // Ajouter un produit au panier
   addToCart(): void {
-    if (this.isLoggedIn) {
-      // Si l'utilisateur est connecté, on récupère ses informations
-      this.dataService.getUserInfo().subscribe(
-        (data: any) => {
-          this.userInfo = data;
-          this.userId = this.userInfo.id;
-  
-          // Ajout du produit au panier via l'API
-          this.dataService.addToCart(this.productId, this.quantite, this.userId).subscribe(
-            () => {
-              // Récupérer les articles du panier après l'ajout
-              this.dataService.getCart(this.userId).subscribe(response => {
-                // Vérifier la structure de la réponse
-                if (response.cartItems) {
-                  // Convertir l'objet cartItems en un tableau
-                  this.cartItems = Object.keys(response.cartItems).map(vendorId => ({
-                    vendeur: response.cartItems[vendorId].vendeur,
-                    items: response.cartItems[vendorId].items
-                  }));
-  
-                  // On récupère tous les articles directement sans les grouper par vendeur
-                  this.totalItems = response.uniqueProductCount || 0;
-                  
-                  // Mettre à jour le nombre total d'articles dans le panier
-                  this.dataService.updateTotalItems(this.totalItems);
-                } else {
-                  console.error('Structure inattendue de la réponse de getCart:', response);
-                }
-              }, (err) => {
-                console.error("Erreur lors de la récupération du panier :", err);
-              });
-  
-              // Naviguer vers le panier après l'ajout
-              this.router.navigate(['/cart']);
-            },
-            (err) => {
-              console.error("Erreur lors de l'ajout au panier :", err);
-            }
-          );
+    if (this.isLoggedIn && this.userId) {
+      this.dataService.addToCart(this.productId, this.quantite, this.userId).subscribe(
+        () => {
+          // Mettre à jour le compteur d'article du panier 
+          this.dataService.getCart(this.userId).subscribe((cartResponse: any) => {
+            // Vérifier la structure de la réponse
+            if (cartResponse.cartItems) {
+              // Mettre à jour le nombre total d'articles dans le panier
+              this.totalItems = cartResponse.uniqueProductCount || 0;
+              this.dataService.updateTotalItems(this.totalItems);  
+            } 
+          });
+          
+          // Mettre à jour l'aperçu de panier dans la navbar 
+          this.dataService.refreshCartPreview(this.userId); 
+
+          this.router.navigate(['/cart']); 
         },
         (err) => {
-          console.error('Erreur lors de la récupération des infos utilisateur:', err);
+          console.error("Erreur lors de l'ajout au panier :", err);
         }
       );
     } else {
-       // Si l'utilisateur n'est pas connecté, gestion du panier local
-        let localCart = JSON.parse(sessionStorage.getItem('cart') || '[]');
-
-        // Trouver si l'article existe déjà dans le panier local
-        const existingItem = localCart.find((item: any) => item.productId === this.productId);
-
-        if (existingItem) {
-          // Si le produit existe déjà, on augmente la quantité
-          existingItem.quantite += this.quantite;
-          // Ne comptabilise pas une deuxième fois cet article dans le total
-        } else {
-          // Sinon, on ajoute le produit au panier
-          localCart.push({
-            productId: this.productId,
-            quantite: this.quantite,
-            product: this.product,
-          });
-        }
-
-        // Sauvegarder le panier local mis à jour dans sessionStorage
-        sessionStorage.setItem('cart', JSON.stringify(localCart));
-
-        
-        // Mettre à jour le nombre total d'articles UNIQUES
-        this.dataService.updateTotalItems(localCart.length);
-
-        // Mettre à jour l'affichage du panier local
-        this.getLocalCartItems();
-
-        // Naviguer vers le panier après l'ajout
-        this.router.navigate(['/cart']);
+      this.addToLocalCart(); 
     }
-  }  
-
-   getCartItems(): void {
-    this.dataService.getUserInfo().subscribe(
-      (data: any) => {
-        this.userInfo = data;
-        this.userId = this.userInfo.id;
+  }
   
-        // Récupérer les articles du panier pour cet utilisateur
-        this.dataService.getCart(this.userId).subscribe(response => {
-          // Convertir l'objet cartItems en un tableau
+  // Ajouter au panier local
+  addToLocalCart(): void {
+    let localCart = JSON.parse(sessionStorage.getItem('cart') || '[]');
+    const existingItem = localCart.find((item: any) => item.productId === this.productId);
+
+    if (existingItem) {
+      existingItem.quantite += this.quantite;
+    } else {
+      localCart.push({
+        productId: this.productId,
+        quantite: this.quantite,
+        product: this.product,
+      });
+    }
+
+    sessionStorage.setItem('cart', JSON.stringify(localCart));
+    
+    this.dataService.refreshLocalCartPreview(); 
+
+    this.updateCartData(); 
+    this.router.navigate(['/cart']);
+  }
+
+  // Récupérer les articles du panier en base de données
+  getCartItems(): void {
+    if (!this.userId) return;
+
+    this.dataService.getCart(this.userId).subscribe(
+      (response) => {
+        if (response.cartItems) {
           this.cartItems = Object.keys(response.cartItems).map(vendorId => ({
             vendeur: response.cartItems[vendorId].vendeur,
             items: response.cartItems[vendorId].items
           }));
-          
-          // On récupère tous les articles directement sans les grouper par vendeur
-          this.totalItems = response.uniqueProductCount || 0;    
-        });
+
+          this.totalItems = response.uniqueProductCount || 0;
+
+          // Mettre à jour le compteur du nombre d'article dans le panier navbar
+          this.dataService.updateTotalItems(this.totalItems);
+        }
       },
       (err) => {
-        console.error('Erreur lors de la récupération des infos utilisateur:', err);
+        console.error('Erreur lors de la récupération du panier:', err);
       }
     );
-  } 
-  
+  }
+
   // Récupérer les informations du panier local
   getLocalCartItems(): void {
-    const localCart = sessionStorage.getItem('cart');
-    if (localCart) {
-      this.cartItems = JSON.parse(localCart);
-  
-      // Calculer le nombre total d'articles dans le panier local
-      this.totalItems = this.cartItems.reduce((sum: number, item: any) => 
-        sum + item.quantite, 0
-      );
+    const localCart = JSON.parse(sessionStorage.getItem('cart') || '[]');
+    this.cartItems = localCart;
+
+    this.totalItems = this.cartItems.reduce((sum: number, item: any) => sum + item.quantite, 0);
+  }
+
+  // Mise à jour du nombre total d'articles dans la navbar
+  updateCartData(): void {
+    if (this.isLoggedIn) {
+      this.getCartItems();
+    } else {
+      this.getLocalCartItems();
     }
-  }  
+  }
 }

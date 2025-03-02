@@ -23,13 +23,41 @@ export class PanierComponent {
       this.isLoggedIn = loggedIn;
       if (this.isLoggedIn) {
         this.getCartItems();
+        this.getCartItemsPreview();
       } else {
         this.getLocalCartItems();
-      }
-    });
-
-    
+      }     
+    });    
   }
+
+  getCartItemsPreview(): void {
+    this.dataService.getUserInfo().subscribe(
+      (data: any) => {
+        this.userInfo = data;
+        this.userId = this.userInfo.id;
+  
+        // Récupérer les articles du panier pour cet utilisateur
+        this.dataService.getCartPreview(this.userId).subscribe(response => {
+          // S'assurer que cartItems existe bien dans la réponse
+          if (response.cartItems) {
+            // Convertir l'objet cartItems en un tableau
+            this.cartItems = Object.keys(response.cartItems).map(vendorId => ({
+              vendeur: response.cartItems[vendorId].vendeur,
+              items: response.cartItems[vendorId].items
+            }));
+            
+            this.total = response.total.toFixed(2);
+            this.totalItems = response.uniqueProductCount || 0;  
+          } else {
+            console.error("cartItems est vide ou mal formaté", response);
+          }
+        });
+      },
+      (err) => {
+        console.error('Erreur lors de la récupération des infos utilisateur:', err);
+      }
+    );
+  }    
 
   // Récupérer les informations du panier 
   getCartItems(): void {
@@ -46,7 +74,7 @@ export class PanierComponent {
             items: response.cartItems[vendorId].items
           }));
   
-          this.total = response.total;
+          this.total = response.total.toFixed(2);
         });
       },
       (err) => {
@@ -78,7 +106,11 @@ export class PanierComponent {
   
                   // Mettre à jour le nombre total d'articles dans le panier
                   this.totalItems = cartResponse.uniqueProductCount || 0;
-                  this.dataService.updateTotalItems(this.totalItems);  
+                  this.dataService.updateTotalItems(this.totalItems); 
+                  
+                  // Mettre à jour l'aperçu de panier dans la navbar 
+                  this.dataService.refreshCartPreview(this.userId); 
+ 
                 } else {
                   console.error('Structure inattendue de la réponse de getCart:', cartResponse);
                 }
@@ -98,8 +130,7 @@ export class PanierComponent {
       this.removeLocalCartItem(productId);
     }
   }
-  
-  
+    
   // Méthode pour mettre à jour la quantité d'un produit dans le panier
   updateCart(item: any): void {
     if (this.isLoggedIn) {
@@ -110,6 +141,9 @@ export class PanierComponent {
     
           this.dataService.updateCartItem(item.product_id, item.quantite, this.userId).subscribe(() => {
             this.getCartItems();  
+
+            // Mettre à jour l'aperçu de panier dans la navbar 
+            this.dataService.refreshCartPreview(this.userId); 
           });
         }
       );  
@@ -147,9 +181,7 @@ export class PanierComponent {
       sessionStorage.setItem('cart', JSON.stringify(localCart));
   
       // Calculer le nombre total d'articles restants
-      this.totalItems = localCart.reduce((sum: number, item: any) => 
-        sum + item.quantite, 0
-      );
+      this.totalItems = this.cartItems.length;
   
       // Mettre à jour le nombre total d'articles dans le service
       this.dataService.updateTotalItems(this.totalItems);
