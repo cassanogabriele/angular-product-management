@@ -54,7 +54,7 @@ export class WishlistDetailsComponent implements OnInit {
     this.alertVisible = true;
     setTimeout(() => (this.alertVisible = false), 3000);
   }
-
+  
   closeAlert(): void {
     this.alertVisible = false;
   }

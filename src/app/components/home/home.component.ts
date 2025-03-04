@@ -17,6 +17,8 @@ export class HomeComponent implements OnInit {
   userId: any;
   successMessage: string | null = null;
   isLoggedIn: boolean = false;
+  totalItems: number = 0; 
+  cartItems: any[] = [];
 
   constructor(
     private dataService: DataService,
@@ -40,6 +42,46 @@ export class HomeComponent implements OnInit {
     this.loadRecentProducts();
     this.loadRecentlyViewedProducts();
     this.loadProductsByCategory();
+
+    this.dataService.loggedIn$.subscribe((loggedIn: boolean) => {
+      this.isLoggedIn = loggedIn;
+      
+      if (this.isLoggedIn) {
+        this.dataService.getUserInfo().subscribe(
+          (data: any) => {
+            this.userInfo = data;
+            this.userId = this.userInfo.id;
+      
+            // Récupérer les articles du panier pour cet utilisateur
+            this.dataService.getCart(this.userId).subscribe(response => {
+              if (response.cartItems && typeof response.cartItems === 'object') {        
+                this.totalItems = response.uniqueProductCount || 0; 
+                
+                this.dataService.updateTotalItems(this.totalItems);
+              } 
+            });
+
+            // Mettre à jour l'aperçu de panier dans la navbar 
+            this.dataService.refreshCartPreview(this.userId); 
+          }
+        );    
+      } else {
+        // Récupération des informations du panier local 
+        let localCart = JSON.parse(sessionStorage.getItem('cart') || '[]');
+
+        if (localCart) {
+          this.cartItems = JSON.parse(localCart);
+      
+          // Calcul du total avec la bonne structure
+          this.totalItems = this.cartItems.reduce((sum: number, item: any) => 
+            sum + ((item.product?.prix || 0) * (item.quantite || 1)), 0
+          );
+        } 
+
+        this.dataService.updateTotalItems(localCart.length);
+        this.dataService.refreshLocalCartPreview();
+      }   
+    });    
   }
 
   loadRecentProducts(): void {

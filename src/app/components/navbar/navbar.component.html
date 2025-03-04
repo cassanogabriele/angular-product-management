@@ -69,10 +69,9 @@
             <ng-container *ngFor="let vendor of cartItems">
               <li *ngFor="let item of vendor.items">
                 <a class="dropdown-item d-flex align-items-center" href="/cart">
-                  <!-- Image -->
+                  
                   <img [src]="item.defaultImage" alt="{{ item.libelle }}" width="50" height="50" class="me-2">
                   
-                  <!-- Product name -->
                   <div>
                     <div><strong>{{ item.libelle }}</strong></div>
                     <div><span class="fw-bold">Quantité :</span> {{ item.quantite }}</div>

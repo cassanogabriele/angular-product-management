@@ -26,6 +26,7 @@ export class PanierConfirmationComponent implements OnInit {
   ngOnInit(): void {
     // Récupération de l'ID du produit depuis l'URL
     const productIdParam = this.activatedRoute.snapshot.paramMap.get('productId');
+
     if (productIdParam) {
       this.productId = Number(productIdParam);
       this.getProductDetails();
@@ -40,10 +41,10 @@ export class PanierConfirmationComponent implements OnInit {
         this.dataService.getUserInfo().subscribe((data: any) => {
           this.userInfo = data;
           this.userId = data.id;
-          this.getCartItems(); // Charger le panier de l'utilisateur connecté
+          this.getCartItems(); 
         });
       } else {
-        this.getLocalCartItems(); // Charger le panier local si non connecté
+        this.getLocalCartItems(); 
       }
     });
   }
@@ -71,12 +72,8 @@ export class PanierConfirmationComponent implements OnInit {
             if (cartResponse.cartItems) {
               // Mettre à jour le nombre total d'articles dans le panier
               this.totalItems = cartResponse.uniqueProductCount || 0;
-              this.dataService.updateTotalItems(this.totalItems);  
             } 
-          });
-          
-          // Mettre à jour l'aperçu de panier dans la navbar 
-          this.dataService.refreshCartPreview(this.userId); 
+          });       
 
           this.router.navigate(['/cart']); 
         },
@@ -105,10 +102,13 @@ export class PanierConfirmationComponent implements OnInit {
     }
 
     sessionStorage.setItem('cart', JSON.stringify(localCart));
-    
-    this.dataService.refreshLocalCartPreview(); 
-
+ 
     this.updateCartData(); 
+    // Récupérer le nombre d'articles uniques dans le panier
+    this.dataService.updateTotalItems(localCart.length);
+    this.dataService.refreshLocalCartPreview();
+    // Récupérer les détails de l'aperçu du panier local à jour 
+    this.dataService.refreshLocalCartPreview();
     this.router.navigate(['/cart']);
   }
 
@@ -125,13 +125,7 @@ export class PanierConfirmationComponent implements OnInit {
           }));
 
           this.totalItems = response.uniqueProductCount || 0;
-
-          // Mettre à jour le compteur du nombre d'article dans le panier navbar
-          this.dataService.updateTotalItems(this.totalItems);
         }
-      },
-      (err) => {
-        console.error('Erreur lors de la récupération du panier:', err);
       }
     );
   }

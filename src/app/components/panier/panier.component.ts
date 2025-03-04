@@ -21,13 +21,37 @@ export class PanierComponent {
     // Vérifier si l'utilisateur est connecté
     this.dataService.loggedIn$.subscribe((loggedIn: boolean) => {
       this.isLoggedIn = loggedIn;
+
+      this.getCartItemsPreview();
+
       if (this.isLoggedIn) {
         this.getCartItems();
-        this.getCartItemsPreview();
+   
+
+        // Panier connecté 
+        this.dataService.getUserInfo().subscribe(
+          (data: any) => {
+            this.userInfo = data;
+            this.userId = this.userInfo.id;
+      
+            // Récupérer les articles du panier pour cet utilisateur
+            this.dataService.getCart(this.userId).subscribe(response => {
+              if (response.cartItems && typeof response.cartItems === 'object') {        
+                this.totalItems = response.uniqueProductCount || 0; 
+                
+                this.dataService.updateTotalItems(this.totalItems);
+              } 
+            });
+
+            // Mettre à jour l'aperçu de panier dans la navbar 
+            this.dataService.refreshCartPreview(this.userId); 
+          }
+        );
+    
       } else {
-        this.getLocalCartItems();
+        this.getLocalCartItems();        
       }     
-    });    
+    });  
   }
 
   getCartItemsPreview(): void {
@@ -105,24 +129,16 @@ export class PanierComponent {
                   }));
   
                   // Mettre à jour le nombre total d'articles dans le panier
-                  this.totalItems = cartResponse.uniqueProductCount || 0;
-                  this.dataService.updateTotalItems(this.totalItems); 
-                  
+                  this.totalItems = cartResponse.uniqueProductCount || 0; 
+
+                  this.dataService.updateTotalItems(this.totalItems);
+
                   // Mettre à jour l'aperçu de panier dans la navbar 
                   this.dataService.refreshCartPreview(this.userId); 
- 
-                } else {
-                  console.error('Structure inattendue de la réponse de getCart:', cartResponse);
-                }
+                } 
               });
             },
-            (err) => {
-              console.error('Erreur lors de la suppression de l\'article du panier', err);
-            }
           );
-        },
-        (err) => {
-          console.error('Erreur lors de la récupération des infos utilisateur:', err);
         }
       );
     } else {
@@ -181,13 +197,13 @@ export class PanierComponent {
       sessionStorage.setItem('cart', JSON.stringify(localCart));
   
       // Calculer le nombre total d'articles restants
-      this.totalItems = this.cartItems.length;
-  
-      // Mettre à jour le nombre total d'articles dans le service
-      this.dataService.updateTotalItems(this.totalItems);
-  
+      this.totalItems = this.cartItems.length;  
       // Mettre à jour l'affichage local du panier
       this.getLocalCartItems();
+
+      // Récupération des informations du panier local 
+      this.dataService.updateTotalItems(localCart.length);
+      this.dataService.refreshLocalCartPreview();
     }
   }
   
