@@ -105,7 +105,7 @@ export class DataService {
   // Créer un compte
   insertUser(data: FormData): Observable<any> {
     // return this.httpClient.post('http://127.0.0.1:8000/api/register', data, {responseType: 'text'});
-    return this.httpClient.post('http://productmanagement.gabriel-cassano.be/api/register', data);
+  return this.httpClient.post('http://productmanagement.gabriel-cassano.be/api/register', data);
   }
 
   // Vérifier si l'utilisateur est connecté 
@@ -206,7 +206,7 @@ export class DataService {
   }
 
   // Créer une nouvelle wishlist et ajouter le produit
-  createWishlist(userId: string, wishlistName: string, productId: any): Observable<any> {    
+  createWishlist(userId: string, wishlistName: string, productId: any): Observable<any> {        
     /*
     return this.httpClient.post('http://127.0.0.1:8000/api/createWishlist', {
       userId: userId,
@@ -214,16 +214,16 @@ export class DataService {
       productId: productId  
     });
     */
-   
+
     return this.httpClient.post('http://productmanagement.gabriel-cassano.be/api/createWishlist', {
       userId: userId,
       name: wishlistName,
       productId: productId  
-    });
+    });   
   }
 
   // Ajouter un produit à une wishlist existante
-  addProductToWishlist(userId: any, wishlistId: any, productId: any): Observable<any> {  
+  addProductToWishlist(userId: any, wishlistId: any, productId: any): Observable<any> {      
     /*
     return this.httpClient.post(`http://127.0.0.1:8000/api/addProductToWhishlist`, {
       userId: userId,
@@ -231,7 +231,7 @@ export class DataService {
       productId: productId
     });
     */
-
+   
     return this.httpClient.post(`http://productmanagement.gabriel-cassano.be/api/addProductToWishlist`, {
       userId: userId,
       wishlistId: wishlistId,
@@ -255,7 +255,7 @@ export class DataService {
       quantite 
     });
     */
-   
+      
     return this.httpClient.post(`http://productmanagement.gabriel-cassano.be/api/addProductToCart`, { 
       product_id: productId, 
       quantite 
@@ -263,26 +263,26 @@ export class DataService {
   }
   
   // Récuper les informations du panier
-  getCart(userId: any): Observable<any> {    
+  getCart(userId: any): Observable<any> {        
     /*
     return this.httpClient.get(`http://127.0.0.1:8000/api/cart`, {
       params: { userId: userId }
     });
     */
-    
+   
     return this.httpClient.get(`http://productmanagement.gabriel-cassano.be/api/cart`, {
       params: { userId: userId }
     });
   }
 
   // Aperçu de panier (navbar)
-  getCartPreview(userId: number): Observable<any> {   
+  getCartPreview(userId: number): Observable<any> {       
     /*
     return this.httpClient.get(`http://127.0.0.1:8000/api/cart-preview`, {
       params: { userId: userId }
     });
     */
-
+ 
     return this.httpClient.get(`http://productmanagement.gabriel-cassano.be/api/cart-preview`, {
       params: { userId: userId }
     });
@@ -303,7 +303,7 @@ export class DataService {
       user_id: userId 
     });
     */
-
+    
     return this.httpClient.post(`http://productmanagement.gabriel-cassano.be/api/updateCartItem`, { 
       product_id: productId, 
       quantite: quantite,

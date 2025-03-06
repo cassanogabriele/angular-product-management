@@ -29,7 +29,7 @@ export class NavbarComponent implements OnInit {
       this.isLoggedIn = loggedIn;
     });
 
-    // S'abonner au compteur d'articles le mettre dans l'affichage
+    // S'abonner au compteur d'articles 
     this.dataService.totalItems$.subscribe((count: number) => {
       this.totalItems = count;
     });
@@ -44,7 +44,7 @@ export class NavbarComponent implements OnInit {
         
         this.dataService.updateTotalItems(localCart.length); 
         
-        // Si déconnecté, afficher le panier local
+        // Si l'utilisateur est déconnecté, afficher le panier local
         this.dataService.refreshLocalCartPreview(); 
       }
     });    
@@ -116,7 +116,7 @@ export class NavbarComponent implements OnInit {
         this.userInfo = data;
         this.userId = this.userInfo.id;
   
-        // Récupérer les articles du panier pour cet utilisateur
+        // Récupérer les articles du panier pour l'utilisateur
         this.dataService.getCart(this.userId).subscribe(response => {
           if (response.cartItems && typeof response.cartItems === 'object') {        
             this.totalItems = response.uniqueProductCount || 0;  
@@ -139,74 +139,5 @@ export class NavbarComponent implements OnInit {
       this.totalItems = this.cartItems.length;
       console.log(this.totalItems);
     }
-  }  
-  //   if (this.isLoggedIn) { 
-  //     this.dataService.getUserInfo().subscribe(
-  //       (data: any) => {
-  //         this.userInfo = data;
-  //         this.userId = this.userInfo.id;
-    
-  //         // Récupérer les articles du panier pour cet utilisateur
-  //         this.dataService.getCartPreview(this.userId).subscribe(response => {
-  //           // S'assurer que cartItems existe bien dans la réponse
-  //           if (response.cartItems) {
-  //             // Convertir l'objet cartItems en un tableau
-  //             this.cartItems = Object.keys(response.cartItems).map(vendorId => ({
-  //               vendeur: response.cartItems[vendorId].vendeur,
-  //               items: response.cartItems[vendorId].items
-  //             }));
-
-  //             console.log(this.cartItems);
-    
-  //             this.total = response.total.toFixed(2);
-  //             this.totalItems = response.uniqueProductCount || 0;  
-  //           } 
-  //         });
-  //       }
-  //     );
-  //   } else {
-  //     console.log("panier local");
-  //     // Aperçu du panier local
-  //    /*  const localCart = sessionStorage.getItem('cart');
-
-  //     if (localCart) {
-  //       this.cartItems = JSON.parse(localCart);
-        
-  //       this.total = 0;
-  //       let itemCount = 0; 
-
-  //       // Parcourir les articles du panier
-  //       for (let i = 0; i < this.cartItems.length && itemCount < 3; i++) { // Limiter à 3 articles
-  //         const item = this.cartItems[i];
-
-  //         // Vérifier que item.product existe avant de l'utiliser
-  //         if (item.product) {
-  //           // Pousser les données correctement dans cartItems avec la structure attendue
-  //           this.cartItems.push({
-  //             vendeur: item.product.libelle, 
-  //             items: [{
-  //               productId: item.productId,
-  //               libelle: item.product.libelle,
-  //               quantite: item.quantite,
-  //               prix: item.product.prix,
-  //               poids: item.product.poids,
-  //               defaultImage: item.product.defaultImage
-  //             }]
-  //           });
-
-  //           // Calcul du total
-  //           this.total += item.product.prix * item.quantite;  
-  //           this.total.toFixed(2);          
-          
-  //           // Incrémenter le compteur d'articles
-  //           itemCount++;
-  //         } else {
-  //           console.warn(`Produit manquant pour l'item avec productId: ${item.productId}`);
-  //         }
-  //       }
-  //     } else {
-  //       console.log('Aucun article dans le panier local');
-  //     } */
-  //   } 
-  // }    
+  } 
 }

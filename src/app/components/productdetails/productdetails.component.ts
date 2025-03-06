@@ -41,7 +41,7 @@ export class ProductDetailsComponent implements OnInit {
     this.router.navigate(['/cart-confirmation', productId]);
   }
 
-    // Ajouter le produit à la liste de souhaits
+  // Ajouter le produit à la liste de souhaits
   handleWishlistClick(productId: any): void {  
     if (!this.dataService.isLoggedIn()) {
       this.router.navigate(['/login']);

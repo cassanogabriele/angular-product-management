@@ -5,33 +5,33 @@
 }
   
 .seller-info {
-   max-width: 70%; /* Peut ajuster selon ton besoin */
+   max-width: 70%; 
 }
   
  .seller-photo img {
    width: 150px;
    height: 150px;
    border-radius: 50%;
-   object-fit: cover; /* Assure-toi que l'image garde un bon ratio */
-   float: right; /* L'image flotte à droite */
-   margin-left: 20px; /* Espacement entre le texte et l'image */
+   object-fit: cover; 
+   float: right; 
+   margin-left: 20px; 
 }
 
 .card {
-   height: 300px; /* Réduit la hauteur des cartes pour un look plus rectangulaire */
+   height: 300px; 
    display: flex;
    flex-direction: column;
-   overflow: hidden; /* Évite les débordements si le contenu est trop grand */
+   overflow: hidden;
 }
 
 .card-img-top {
-   height: 120px; /* Réduit encore la hauteur de l'image pour une forme plus rectangulaire */
-   object-fit: cover; /* Permet de conserver le ratio sans déformer l'image */
+   height: 120px; 
+   object-fit: cover; 
 }
 
 .card-body {
-   flex: 1; /* Permet au contenu de remplir l’espace restant */
-   padding: 10px; /* Donne un peu d'espace autour du texte */
+   flex: 1; 
+   padding: 10px;
    display: flex;
    flex-direction: column;
    justify-content: space-between;

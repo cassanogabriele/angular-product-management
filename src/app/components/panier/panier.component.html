@@ -13,7 +13,7 @@
     </thead>
 
     <tbody>
-      <!-- Si connecté : affichage groupé par vendeur -->
+      <!-- Si l'utilisateur est 'connecté : affichage groupé par vendeur -->
       <ng-container *ngIf="isLoggedIn; else localCartView">
         <ng-container *ngFor="let vendorGroup of cartItems">
           <ng-container *ngFor="let item of vendorGroup.items">
@@ -53,7 +53,7 @@
         </ng-container>
       </ng-container>
 
-      <!-- Si non connecté : affichage sans vendeur -->
+      <!-- Si l'utilisateur n'est pas connecté : affichage sans vendeur -->
       <ng-template #localCartView>
         <ng-container *ngFor="let item of cartItems">
           <tr>
@@ -93,14 +93,13 @@
     </tbody>
   </table>
 
-  <!-- Résumé du panier -->
   <div class="cart-summary">
     <hr>
     <p><strong>Total du panier:</strong> {{ total || 0 }} €</p>
   </div>
 </div>
 
-<!-- Message si le panier est vide -->
+<!-- Afficher un message si le panier est vide -->
 <div *ngIf="!cartItems || cartItems.length === 0">
   <div class="alert alert-info mt-4" role="alert">
    Votre panier est vide

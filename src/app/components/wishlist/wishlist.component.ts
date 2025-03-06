@@ -38,7 +38,7 @@ export class WishlistComponent implements OnInit {
     this.loadWishlist();
   }
 
-  // Charger les wishlists de l'utilisateur
+  // Charger les listes de souhaits de l'utilisateur
   loadWishlist(): void {
     this.dataService.getUserInfo().subscribe(
       (data: any) => {
@@ -63,7 +63,7 @@ export class WishlistComponent implements OnInit {
     );
   }
 
-  // Créer une wishlist
+  // Créer une liste de souhaits
   createWishlist(): void {
     if (this.wishlistForm) {
       this.wishlistForm.form.markAllAsTouched();
@@ -76,7 +76,7 @@ export class WishlistComponent implements OnInit {
         () => {
           // Stocker le message de succès dans sessionStorage
           sessionStorage.setItem('wishlistSuccessMessage', `La liste "${this.newWishlistName}" a été créée avec succès et le produit a été ajouté !`);
-          // Rediriger vers la page de détails de la wishlist ou actualiser la page
+          // Rediriger vers la page de détails de la liste de souhaits ou actualiser la page
           this.router.navigate(['/wishlist-details']); 
         },
         (error) => {
@@ -86,7 +86,7 @@ export class WishlistComponent implements OnInit {
     });    
   }
 
-  // Ajouter un produit à la wishlist
+  // Ajouter un produit à la liste de souhait choisie
   addProductToWishlist(): void {
     if (!this.selectedWishlistId || !this.productId) { 
       return;

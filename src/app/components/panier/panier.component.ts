@@ -21,12 +21,10 @@ export class PanierComponent {
     // Vérifier si l'utilisateur est connecté
     this.dataService.loggedIn$.subscribe((loggedIn: boolean) => {
       this.isLoggedIn = loggedIn;
-
-      this.getCartItemsPreview();
-
+    
       if (this.isLoggedIn) {
-        this.getCartItems();
-   
+        this.getCartItems();   
+        this.getCartItemsPreview();
 
         // Panier connecté 
         this.dataService.getUserInfo().subscribe(
@@ -34,7 +32,7 @@ export class PanierComponent {
             this.userInfo = data;
             this.userId = this.userInfo.id;
       
-            // Récupérer les articles du panier pour cet utilisateur
+            // Récupérer les articles du panier l'utitilisateur
             this.dataService.getCart(this.userId).subscribe(response => {
               if (response.cartItems && typeof response.cartItems === 'object') {        
                 this.totalItems = response.uniqueProductCount || 0; 
@@ -90,7 +88,7 @@ export class PanierComponent {
         this.userInfo = data;
         this.userId = this.userInfo.id;
   
-        // Récupérer les articles du panier pour cet utilisateur
+        // Récupérer les articles du panier pour l' utilisateur
         this.dataService.getCart(this.userId).subscribe(response => {      
           // Convertir l'objet cartItems en un tableau
           this.cartItems = Object.keys(response.cartItems).map(vendorId => ({
@@ -107,10 +105,9 @@ export class PanierComponent {
     );
   }    
 
-  // Supprimer un article du panier en utilisant l'ID du produit et l'ID de l'utilisateur
+  // Supprimer un article du panier 
   removeFromCart(productId: number): void {
     if (this.isLoggedIn) {
-      // Suppression côté serveur
       this.dataService.getUserInfo().subscribe(
         (data: any) => {
           this.userInfo = data;
@@ -122,7 +119,6 @@ export class PanierComponent {
               this.dataService.getCart(this.userId).subscribe((cartResponse: any) => {
                 // Vérifier la structure de la réponse
                 if (cartResponse.cartItems) {
-                  // Convertir l'objet cartItems en un tableau
                   this.cartItems = Object.keys(cartResponse.cartItems).map(vendorId => ({
                     vendeur: cartResponse.cartItems[vendorId].vendeur,
                     items: cartResponse.cartItems[vendorId].items
@@ -142,12 +138,12 @@ export class PanierComponent {
         }
       );
     } else {
-      // Si non connecté, supprimer l'article du panier local
+      // Si l'utilisateur n'est pas connecté, on supprime l'article du panier local
       this.removeLocalCartItem(productId);
     }
   }
     
-  // Méthode pour mettre à jour la quantité d'un produit dans le panier
+  // Metrre à jour la quantité d'un produit dans le panier
   updateCart(item: any): void {
     if (this.isLoggedIn) {
       this.dataService.getUserInfo().subscribe(
@@ -164,7 +160,7 @@ export class PanierComponent {
         }
       );  
     } else {
-      // Si pas connecté, mise à jour dans le panier local 
+      // Si l'utilisateur n'est pas connecté, on met à jour le panier local 
       this.updateLocalCart(item);
     }
   }

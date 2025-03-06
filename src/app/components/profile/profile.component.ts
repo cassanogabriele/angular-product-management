@@ -17,7 +17,8 @@ export class ProfileComponent implements OnInit {
     email: '',
     password: '',
     password_confirmation: '',
-    photo: null as File | null,  // Spécifier que la photo peut être un objet File ou null
+     // Spécifier que la photo peut être un objet File ou null
+    photo: null as File | null, 
     sexe: ''
   };
   
@@ -27,7 +28,8 @@ export class ProfileComponent implements OnInit {
  
   editMode: boolean = false;
   selectedFile: File | null = null;
-  selectedImageUrl: string | null = null;  // Ajouter une variable pour l'aperçu de l'image
+  // Ajouter une variable pour l'aperçu de l'image
+  selectedImageUrl: string | null = null;  
 
   constructor(
     private dataService: DataService,
@@ -60,7 +62,8 @@ export class ProfileComponent implements OnInit {
 
   cancelEdit(): void {
     this.editMode = false;
-    this.editData = { ...this.userInfo }; // Réinitialiser aux données originales
+     // Réinitialiser aux données originales
+    this.editData = { ...this.userInfo };
   }
 
   // Gérer l'upload de la photo et afficher l'aperçu
@@ -68,8 +71,10 @@ export class ProfileComponent implements OnInit {
     const file = event.target.files[0];
 
     if (file) {
-      this.user.photo = file; // Assigner le fichier sélectionné
-      this.selectedImageUrl = URL.createObjectURL(file); // Créer une URL temporaire pour l'aperçu
+      // Assigner le fichier sélectionné
+      this.user.photo = file; 
+      // Créer une URL temporaire pour l'aperçu
+      this.selectedImageUrl = URL.createObjectURL(file); 
     }
   }
 
@@ -92,6 +97,7 @@ export class ProfileComponent implements OnInit {
         this.userInfo = response;
         this.editMode = false;
         this.userLoginSuccessMessage = "Profil mis à jour avec succès!";    
+        
         // Recharger les informations de l'utilisateur à jour
         this.dataService.getUserInfo().subscribe(
           (data: any) => {

@@ -68,7 +68,7 @@ export class AllproductsComponent implements OnInit {
     );
   }
 
-  // Nouvelle méthode pour récupérer le titre de la catégorie
+  // Récupérer le titre de la catégorie
   getCategoryTitle(categoryId: number): void {
     this.dataService.getCategoryById(categoryId).subscribe(
       (res) => {
@@ -98,7 +98,7 @@ export class AllproductsComponent implements OnInit {
     } else {
       let viewedProducts = JSON.parse(localStorage.getItem('recentlyViewed') || '[]');
 
-      // Vérifier si l'article existe déjà pour éviter les doublons
+      // Vérifier si l'article existe déjà (pour éviter les doublons)
       const existingIndex = viewedProducts.findIndex((item: any) => item.id === productId);
 
       if (existingIndex === -1) {
@@ -107,12 +107,13 @@ export class AllproductsComponent implements OnInit {
             this.product = res;
             viewedProducts.push(this.product);
 
-            // Limiter à un certain nombre d'articles (ex: max 10 articles)
+            // Limiter à un certain nombre d'articles 
             if (viewedProducts.length > 10) {
-              viewedProducts.shift(); // Supprime le plus ancien
+              // Supprime le plus ancien
+              viewedProducts.shift(); 
             }
 
-            // Sauvegarder dans localStorage
+            // Sauvegarder dans le localStorage
             localStorage.setItem('recentlyViewed', JSON.stringify(viewedProducts));
           },
           (err) => {

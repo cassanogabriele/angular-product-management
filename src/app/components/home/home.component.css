@@ -1,18 +1,18 @@
 .card {
-    height: 300px; /* Réduit la hauteur des cartes pour un look plus rectangulaire */
+    height: 300px; 
     display: flex;
     flex-direction: column;
-    overflow: hidden; /* Évite les débordements si le contenu est trop grand */
+    overflow: hidden;
 }
 
 .card-img-top {
-    height: 120px; /* Réduit encore la hauteur de l'image pour une forme plus rectangulaire */
-    object-fit: cover; /* Permet de conserver le ratio sans déformer l'image */
+    height: 120px; 
+    object-fit: cover; 
 }
 
 .card-body {
-    flex: 1; /* Permet au contenu de remplir l’espace restant */
-    padding: 10px; /* Donne un peu d'espace autour du texte */
+    flex: 1; 
+    padding: 10px; 
     display: flex;
     flex-direction: column;
     justify-content: space-between;

@@ -21,20 +21,19 @@
 }
 
 .fixed-size-image {
-    width: 300px;  /* Largeur fixe */
-    height: 300px; /* Hauteur fixe */
-    object-fit: cover;  /* Cela permet de remplir l'espace sans déformer l'image */
-    border-radius: 8px;  /* Optionnel, pour arrondir les bords */
+    width: 300px; 
+    height: 300px; 
+    object-fit: cover;  
+    border-radius: 8px; 
 }
 
 .fixed-size-thumbnail{
-    width: 125%;  /* Largeur fixe */
-    height: 165px; /* Hauteur fixe */
-    object-fit: cover;  /* Cela permet de remplir l'espace sans déformer l'image */
-    border-radius: 8px;  /* Optionnel, pour arrondir les bords */
+    width: 125%; 
+    height: 165px; 
+    object-fit: cover; 
+    border-radius: 8px;  
 }
   
-/* Enlever le soulignement des liens */
 a {
     text-decoration: none;
 }

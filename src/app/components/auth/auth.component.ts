@@ -151,12 +151,12 @@ export class AuthComponent implements OnInit {
     } 
   }  
 
-  // Enregistrement du panier local 
+  // Enregistrement du panier local en db lorsque l'utilisateur se connecter
   syncLocalCartWithDb(): void {
     let localCart = JSON.parse(sessionStorage.getItem('cart') || '[]');
 
     if (localCart.length === 0) {
-        return; // Pas besoin de synchronisation si le panier est vide
+        return; 
     }
 
     const userId = JSON.parse(sessionStorage.getItem('user') || '{}').id;
@@ -168,7 +168,7 @@ export class AuthComponent implements OnInit {
 
     this.dataService.getCart(userId).subscribe(
         (response: any) => {
-            // Assurez-vous que cartItems est un tableau
+            // S'assurer que c'est un tableau 
             const cartItemsArray = Array.isArray(response.cartItems)
                 ? response.cartItems
                 : Object.values(response.cartItems || {});
@@ -183,7 +183,7 @@ export class AuthComponent implements OnInit {
                 }
             });
 
-            // Une fois la synchronisation terminée, vider le panier local
+            // Vider le panier local, une fois que le panier est enregistré en db
             sessionStorage.removeItem('cart');           
         },
         (err) => console.error('Erreur lors de la récupération du panier de l\'utilisateur:', err)
@@ -198,7 +198,7 @@ export class AuthComponent implements OnInit {
     let localCart = JSON.parse(sessionStorage.getItem('cart') || '[]');
   }
 
-  // Méthode pour fermer le message de succès
+  // Fermer la vid qui affiche le message de succès
   closeMessage(): void {
     this.successMessage = '';
   }

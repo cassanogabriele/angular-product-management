@@ -34,7 +34,6 @@ export class PanierConfirmationComponent implements OnInit {
       console.error("ID du produit invalide.");
     }
 
-    // Vérification de la connexion de l'utilisateur
     this.dataService.loggedIn$.subscribe((loggedIn: boolean) => {
       this.isLoggedIn = loggedIn;
       if (this.isLoggedIn) {
@@ -67,8 +66,7 @@ export class PanierConfirmationComponent implements OnInit {
       this.dataService.addToCart(this.productId, this.quantite, this.userId).subscribe(
         () => {
           // Mettre à jour le compteur d'article du panier 
-          this.dataService.getCart(this.userId).subscribe((cartResponse: any) => {
-            // Vérifier la structure de la réponse
+          this.dataService.getCart(this.userId).subscribe((cartResponse: any) => {    
             if (cartResponse.cartItems) {
               // Mettre à jour le nombre total d'articles dans le panier
               this.totalItems = cartResponse.uniqueProductCount || 0;
@@ -104,11 +102,12 @@ export class PanierConfirmationComponent implements OnInit {
     sessionStorage.setItem('cart', JSON.stringify(localCart));
  
     this.updateCartData(); 
+
     // Récupérer le nombre d'articles uniques dans le panier
     this.dataService.updateTotalItems(localCart.length);
-    this.dataService.refreshLocalCartPreview();
     // Récupérer les détails de l'aperçu du panier local à jour 
     this.dataService.refreshLocalCartPreview();
+
     this.router.navigate(['/cart']);
   }
 
@@ -138,7 +137,7 @@ export class PanierConfirmationComponent implements OnInit {
     this.totalItems = this.cartItems.reduce((sum: number, item: any) => sum + item.quantite, 0);
   }
 
-  // Mise à jour du nombre total d'articles dans la navbar
+  // Mettre à jour le nombre total d'articles dans la navbar
   updateCartData(): void {
     if (this.isLoggedIn) {
       this.getCartItems();

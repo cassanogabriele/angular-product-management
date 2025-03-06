@@ -16,14 +16,15 @@ export class SignupComponent {
     email: '',
     password: '',
     password_confirmation: '',
-    photo: null as File | null,  // Spécifier que la photo peut être un objet File ou null
+    photo: null as File | null, 
     sexe: ''
   };
 
   // Récupérer une référence au formulaire Angular
   @ViewChild('userForm') userForm!: NgForm;
+
   alertMessage: string = ''; 
-  selectedImageUrl: string | null = null; // Aperçu de l'image
+  selectedImageUrl: string | null = null; 
 
   constructor(
     private dataService: DataService,
@@ -36,7 +37,8 @@ export class SignupComponent {
     const file = event.target.files[0];
     if (file) {
       this.user.photo = file;
-      this.selectedImageUrl = URL.createObjectURL(file); // Créer une URL temporaire pour l'aperçu
+       // Créer une URL temporaire pour l'aperçu
+      this.selectedImageUrl = URL.createObjectURL(file);
     }
   }
 

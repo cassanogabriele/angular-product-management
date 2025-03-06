@@ -33,7 +33,6 @@
         <h2 class="mb-4 text-warning">Produits récemment vus</h2>
 
         <div class="row g-4">
-            <!-- Loop over the recent products array -->
             <div class="col-md-4" *ngFor="let product of recentlyViewedProducts">
                 <div class="card h-100">
                     <img [src]="product.product.defaultImage" class="card-img-top" alt="{{ product.product.libelle }}">
@@ -52,7 +51,6 @@
         </div>
     </div>
 </section>
-
 
 <!-- Produits récemment locaux (utilisateur non connecté) -->
 <section id="section1" class="py-5 bg-light" *ngIf="!isLoggedIn && localRecentlyViewedProducts.length > 0">
@@ -86,7 +84,6 @@
         <div *ngFor="let category of limitedProducts">
             <h3 class="mt-4 fw-bold">{{ category.category_name }}</h3>
             <div class="row g-4">
-                <!-- Loop over the products array -->
                 <div class="col-md-4" *ngFor="let product of category.products">
                     <div class="card h-100">
                         <img [src]="product.defaultImage" class="card-img-top" alt="{{ product.libelle }}">
@@ -103,7 +100,6 @@
                     </div>
                 </div>
 
-                <!-- Add placeholders if the number of products is less than 3 -->
                 <ng-container *ngIf="category.products.length < 3">
                     <div class="col-md-4" *ngFor="let placeholder of placeholderArray(category)">
                         <div class="card h-100">

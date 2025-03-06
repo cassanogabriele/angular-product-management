@@ -84,7 +84,7 @@ export class ProductsComponent implements OnInit {
     this.alertMessage = message;
     this.alertVisible = true;
 
-    // Cache l'alerte après 3 secondes
+    // Cache l'alerte 
     setTimeout(() => {
       this.alertVisible = false;
     }, 3000);

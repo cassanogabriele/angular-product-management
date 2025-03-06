@@ -12,7 +12,7 @@ export class HomeComponent implements OnInit {
   recentProducts: any[] = [];
   recentlyViewedProducts: any[] = [];
   localRecentlyViewedProducts: any[] = [];
-  limitedProducts: any[] = [];  // Catégories avec produits (format que l'API renvoie)
+  limitedProducts: any[] = [];  
   userInfo: any;
   userId: any;
   successMessage: string | null = null;
@@ -28,7 +28,7 @@ export class HomeComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Récupérer le message de succès depuis sessionStorage
+    // Récupérer le message de succès depuis ""sessionStorage""
     this.successMessage = sessionStorage.getItem('userLoginSuccessMessage');
 
     // Supprimer le message après l'avoir récupéré
@@ -52,7 +52,7 @@ export class HomeComponent implements OnInit {
             this.userInfo = data;
             this.userId = this.userInfo.id;
       
-            // Récupérer les articles du panier pour cet utilisateur
+            // Récupérer les articles du panier de l'utilisateur
             this.dataService.getCart(this.userId).subscribe(response => {
               if (response.cartItems && typeof response.cartItems === 'object') {        
                 this.totalItems = response.uniqueProductCount || 0; 
@@ -70,9 +70,9 @@ export class HomeComponent implements OnInit {
         let localCart = JSON.parse(sessionStorage.getItem('cart') || '[]');
 
         if (localCart) {
-          this.cartItems = JSON.parse(localCart);
+          this.cartItems = localCart;
       
-          // Calcul du total avec la bonne structure
+          // Calcul du total 
           this.totalItems = this.cartItems.reduce((sum: number, item: any) => 
             sum + ((item.product?.prix || 0) * (item.quantite || 1)), 0
           );
@@ -123,7 +123,7 @@ export class HomeComponent implements OnInit {
         // Créer un objet pour regrouper les produits par catégorie
         const groupedProducts: any[] = [];
         
-        // Utilisation de `reduce` pour regrouper les produits par `category_name`
+        // Regrouper les produits par catégorie
         data.forEach((item: any) => {
           const categoryIndex = groupedProducts.findIndex(
             (category: any) => category.category_name === item.category_name
@@ -141,7 +141,7 @@ export class HomeComponent implements OnInit {
           }
         });
   
-        // Assignation du tableau regroupé à la variable `limitedProducts`
+        // Assignation du tableau regroupé 
         this.limitedProducts = groupedProducts;
       },
       (error) => {
@@ -152,8 +152,10 @@ export class HomeComponent implements OnInit {
 
    // Fonction pour générer un tableau de placeholders en fonction des produits existants
    placeholderArray(category: any): any[] {
-    const remaining = 3 - category.products.length; // Calcule combien de tuiles sont nécessaires
-    return new Array(remaining).fill(null); // Remplis avec des éléments factices
+    // Calcul du nombre de tuiles nécessaires
+    const remaining = 3 - category.products.length; 
+    // Remplissage 
+    return new Array(remaining).fill(null); 
   }
   
   recordProduct(productId: number): void {   
