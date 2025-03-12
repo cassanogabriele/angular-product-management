@@ -34,10 +34,11 @@
         class="rounded"
         style="max-width:300px; height: 150px; object-fit: cover;"
         alt="{{ product.name }}"
+        (click)="viewProductDetails(product.id)"
       />
       
       </td>
-      <td>{{ product.libelle }}</td>
+      <td><span (click)="viewProductDetails(product.id)">{{ product.libelle }}</span></td>
       <td>{{ product.reference }}</td>
       <td>{{ product.description }}</td>
       <td>{{ product.quantite }}</td>
@@ -55,7 +56,8 @@
 
           <button
             class="btn btn-warning btn-sm text-white d-flex align-items-center justify-content-center"
-            [routerLink]="'edit/' + product.id"
+            [routerLink]="'/edit/' + product.id"
+
             style="width: 35px; height: 35px;"
           >
             <i class="fa fa-edit"></i>

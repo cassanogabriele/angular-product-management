@@ -48,4 +48,5 @@ export class ProductDetailsComponent implements OnInit {
     } else {
       this.router.navigate(['/wishlist', productId]);
     }   
-  }    }
+  }    
+}

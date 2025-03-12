@@ -1,0 +1,17 @@
+.fixed-size-image {
+    width: 300px; 
+    height: 300px; 
+    object-fit: cover;  
+    border-radius: 8px; 
+}
+
+.fixed-size-thumbnail{
+    width: 125%; 
+    height: 165px; 
+    object-fit: cover; 
+    border-radius: 8px;  
+}
+  
+.img-fluid {
+    border-radius: 8px;
+}

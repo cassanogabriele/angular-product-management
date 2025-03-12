@@ -1,6 +1,6 @@
-<form #productForm="ngForm" (ngSubmit)="updateProduct()">
+<form #productForm="ngForm" (ngSubmit)="updateProduct()" class="mb-5">
   <div class="form-group">
-    <label for="libelle">Libellé</label>
+    <label for="libelle" class="fw-bold">Libellé</label>
     <input
       id="libelle"
       name="libelle"
@@ -8,7 +8,7 @@
       required
       #reference="ngModel"
       type="text"
-      class="text form-control"
+      class="text form-control mt-2"
     />
 
     <div *ngIf="reference.invalid && reference.touched">       
@@ -19,7 +19,7 @@
   </div>
   
     <div class="form-group">
-      <label for="reference">Référence</label>
+      <label for="reference" class="fw-bold mt-2">Référence</label>
       <input
         id="reference"
         name="reference"
@@ -27,7 +27,7 @@
         required
         #reference="ngModel"
         type="text"
-        class="text form-control"
+        class="text form-control mt-2"
       />
 
       <div *ngIf="reference.invalid && reference.touched">       
@@ -38,7 +38,7 @@
     </div>
   
     <div class="form-group">
-      <label for="description">Description</label>
+      <label for="description" class="fw-bold mt-2">Description</label>
       <input
         id="description"
         name="description"
@@ -46,7 +46,7 @@
         required
         #description="ngModel"
         type="text"
-        class="text form-control"
+        class="text form-control mt-2"
       />
 
       <div *ngIf="description.invalid && description.touched">
@@ -57,7 +57,7 @@
     </div>
   
     <div class="form-group">
-      <label for="quantite">Quantité</label>
+      <label for="quantite" class="fw-bold mt-2">Quantité</label>
       <input
         id="quantite"
         name="quantite"
@@ -65,7 +65,7 @@
         required
         type="number"
         #quantite="ngModel"
-        class="text form-control"
+        class="text form-control mt-2"
       />
       <div *ngIf="quantite.invalid && quantite.touched">        
         <div class="alert alert-danger alert-dismissible fade show mt-4" role="alert">
@@ -75,7 +75,7 @@
     </div>
   
     <div class="form-group">
-      <label for="prix">Prix</label>
+      <label for="prix" class="fw-bold mt-2">Prix</label>
       <input
         id="prix"
         name="prix"
@@ -83,7 +83,7 @@
         required
         type="number"
         #prix="ngModel"
-        class="text form-control"
+        class="text form-control mt-2"
       />
       <div *ngIf="prix.invalid && prix.touched">
         <div class="alert alert-danger alert-dismissible fade show mt-4" role="alert">
@@ -91,6 +91,91 @@
         </div>        
       </div>
     </div>
+
+    <h6 class="mt-4 fw-bold">Images</h6>
+     
+    <!-- Image par défaut -->
+    <div class="form-group">
+      <label for="defaultImage" class="fw-bold mt-3">Image par défaut</label>
+
+      <hr>
+
+      <p class="fw-bold mt-3">Image par défaut actuelle</p>
+
+      <img
+        [src]="product.defaultImage || 'assets/images/no-image.png'"
+        class="card-img-top img-fluid mt-2"
+        style="max-width: 150px; height: auto;"
+        alt="{{ product.libelle }}"
+      />
+
+    <p class="fw-bold mt-2">Remplacer l'image par défaut</p>
+
+    <input
+      type="file"
+      id="defaultImage"
+      name="defaultImage"
+      (change)="onFileChange($event, 'defaultImage')"  
+      class="form-control mt-2"
+    />
+    <!-- Affichage de l'image par défaut après sélection -->
+    <div *ngIf="defaultImageUrl">
+      <p>Image par défaut sélectionnée : {{ defaultImage?.name }}</p>
+      <img [src]="defaultImageUrl" alt="Image par défaut" class="thumbnail img-thumbnail img-fluid rounded" />
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- Autres images -->
+  <div class="form-group">
+    <label for="otherImages" class="fw-bold mt-2">Autres images</label>
+
+    <p class="fw-bold mt-3">Images actuelle</p>
+
+    <div class="mt-4">
+      <div class="row">
+        <div *ngFor="let image of product?.images" class="col-md-3 mb-3">
+          <img
+            [src]="image.image_path || 'assets/images/no-image.png'"
+            class="img-fluid img-thumbnail fixed-size-thumbnail"
+            alt="{{ product?.libelle }} image"
+          />
+    
+          <!-- Bouton en dessous de l'image, aligné à droite -->
+          <div class="text-end mt-2">
+            <button
+              (click)="removeImage(image.id)"
+              class="btn btn-lg text-danger border-0"
+              aria-label="Supprimer l'image"
+            >
+              <i class="fa fa-trash"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    
+    <input
+      type="file"
+      id="otherImages"
+      name="otherImages"
+      (change)="onFileChange($event, 'otherImages')"
+      class="form-control mt-2"
+      multiple
+    />
+
+    <!-- Affichage des autres images après sélection -->
+    <div *ngIf="otherImagesUrls.length > 0" class="mt-3">
+      <p>Autres images sélectionnées :</p>
+      <div class="image-gallery">
+        <div *ngFor="let imgUrl of otherImagesUrls" class="image-item">
+          <img [src]="imgUrl" alt="Autres images" class="thumbnail img-thumbnail img-fluid rounded" />
+        </div>
+      </div>
+    </div>
+  </div>
   
-    <button class="btn btn-dark btn-sm mt-4"><i class="fa fa-edit"></i> Modifier</button>
+    <button class="btn btn-success btn-sm mt-4"><i class="fa fa-edit"></i> Modifier</button>
 </form>   

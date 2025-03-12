@@ -26,25 +26,25 @@
 }
 
 .thumbnail-container {
-    width: 100%;               /* Largeur dynamique pour s'adapter à la carte */
-    height: 255px;             /* Hauteur fixe */
-    overflow: hidden;          /* Cache les parties de l'image qui débordent */
-    position: relative;        /* Nécessaire pour contenir l'image */
-    border-radius: 8px;        /* Coins arrondis (optionnel) */
-    border: 1px solid #ddd;    /* Bordure pour démarquer l'image */
-    background-color: #f8f9fa; /* Couleur de fond (optionnel) */
+    width: 100%;              
+    height: 255px;             
+    overflow: hidden;          
+    position: relative;        
+    border-radius: 8px;        
+    border: 1px solid #ddd;    
+    background-color: #f8f9fa; 
 }
   
 .thumbnail-container img {
-    position: absolute;        /* Permet le centrage */
-    top: 50%;                  /* Centre verticalement */
-    left: 50%;                 /* Centre horizontalement */
-    transform: translate(-50%, -50%); /* Ajuste pour un centrage parfait */
-    width: 100%;               /* Remplit la largeur */
-    height: auto;              /* Maintient le ratio de l'image */
-    object-fit: cover;         /* Recadre l'image pour remplir le conteneur */
-  }
+    position: absolute;     
+    top: 50%;                  
+    left: 50%;                
+    transform: translate(-50%, -50%); 
+    width: 100%;               
+    height: auto;            
+    object-fit: cover;        
+}
   
- a {
+a {
     text-decoration: none;
 }

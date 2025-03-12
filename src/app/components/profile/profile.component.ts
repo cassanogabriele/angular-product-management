@@ -17,7 +17,7 @@ export class ProfileComponent implements OnInit {
     email: '',
     password: '',
     password_confirmation: '',
-     // Spécifier que la photo peut être un objet File ou null
+    // Spécifier que la photo peut être un objet File ou null
     photo: null as File | null, 
     sexe: ''
   };

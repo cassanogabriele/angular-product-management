@@ -18,7 +18,6 @@ export class SellerProfileComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    // Récupère l'ID passé dans l'URL
     const sellerId = this.route.snapshot.paramMap.get('id'); 
 
     if(sellerId )

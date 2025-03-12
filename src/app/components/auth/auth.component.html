@@ -4,16 +4,14 @@
   <button type="button" class="btn-close" aria-label="Close" (click)="closeMessage()"></button>
 </div>
 
-
 <!-- Message d'erreur si les identifiants sont incorrects -->
 <div class="alert alert-danger alert-dismissible fade show mt-4" role="alert" *ngIf="alertMessage">
   {{ alertMessage  }}
   <button type="button" class="btn-close" aria-label="Close" (click)="closeMessage()"></button>
 </div>
 
-<div class="container">
-  <form #loginForm="ngForm" (ngSubmit)="login()">    
-    <!-- Email -->
+<div class="container">  <form #loginForm="ngForm" (ngSubmit)="login()">    
+
     <div class="form-group mt-2">
       <label for="email">Email</label>
       <input
@@ -32,7 +30,6 @@
       </div>
     </div>
     
-    <!-- Mot de passe -->
     <div class="form-group mt-2">
       <label for="password">Mot de passe</label>
       <input

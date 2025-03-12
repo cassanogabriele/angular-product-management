@@ -13,7 +13,7 @@ export class ProductService {
   
   // Enregistrer l'article vu
   recordViewedProduct(productId: number, userId: number): Observable<any> {
-    // return this.httpClient.post(`http://127.0.0.1:8000/api/product/viewed/${productId}/${userId}`, null);
+    //  return this.httpClient.post(`http://127.0.0.1:8000/api/product/viewed/${productId}/${userId}`, null);
     return this.httpClient.post('http://productmanagement.gabriel-cassano.be/api/product/viewed/${productId}/${userId}', null);
   } 
 

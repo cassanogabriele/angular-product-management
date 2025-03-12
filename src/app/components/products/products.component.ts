@@ -3,6 +3,7 @@ import { Product } from 'src/app/product';
 import { DataService } from 'src/app/services/data.service';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
+import { ProductService } from 'src/app/services/product.service';
 
 @Component({
   selector: 'app-products', 
@@ -23,6 +24,8 @@ export class ProductsComponent implements OnInit {
   alertVisible: boolean = false; 
   errorMessage: string = '';
   userInfo: any;
+  userId: any;
+  product: any; 
 
   // Constructeur de classe, appelé lorsque le composant est instancié
 
@@ -33,8 +36,9 @@ export class ProductsComponent implements OnInit {
   */
   constructor(
     private dataService: DataService, 
-    private router: Router) 
-  {}  
+    private router: Router,
+    private productService: ProductService 
+  ){}  
 
   /*
   Méthode de cycle de vie dans Angular, qui est appelée juste après que le composant a été initialisé, après que 
@@ -57,6 +61,15 @@ export class ProductsComponent implements OnInit {
         this.showAlert(successMessage);
         // Supprimer le message de succès après l'affichage
         sessionStorage.removeItem('productSuccessMessage');
+      }
+
+      // Vérifiez si un message de succès est stocké dans sessionStorage et le récupérer
+      const updateProductsuccessMessage = sessionStorage.getItem('updateProductsuccessMessage');
+  
+      if (updateProductsuccessMessage) {
+        this.showAlert(updateProductsuccessMessage);
+        // Supprimer le message de succès après l'affichage
+        sessionStorage.removeItem('updateProductsuccessMessage');
       }
     }   
   }
@@ -108,5 +121,51 @@ export class ProductsComponent implements OnInit {
       this.getProductData();
       this.showAlert('Produit mise à jour avec succès !');
     })
+  }
+
+  viewProductDetails(productId: number): void {
+    if (this.dataService.isLoggedIn()) {
+      this.dataService.getUserInfo().subscribe(
+        (data: any) => {
+          this.userInfo = data;
+          this.userId = this.userInfo.id;
+  
+          this.productService.recordViewedProduct(productId, this.userId).subscribe(() => {
+            this.router.navigate([`/product/${productId}`]);
+          });
+        },
+        (err) => {
+          console.error('Erreur lors de la récupération des infos utilisateur:', err);
+        }
+      );
+    } else {
+      let viewedProducts = JSON.parse(localStorage.getItem('recentlyViewed') || '[]');
+
+      // Vérifier si l'article existe déjà (pour éviter les doublons)
+      const existingIndex = viewedProducts.findIndex((item: any) => item.id === productId);
+
+      if (existingIndex === -1) {
+        this.dataService.getProductById(productId).subscribe(
+          (res) => {
+            this.product = res;
+            viewedProducts.push(this.product);
+
+            // Limiter à un certain nombre d'articles 
+            if (viewedProducts.length > 10) {
+              // Supprime le plus ancien
+              viewedProducts.shift(); 
+            }
+
+            // Sauvegarder dans le localStorage
+            localStorage.setItem('recentlyViewed', JSON.stringify(viewedProducts));
+          },
+          (err) => {
+            console.error('Erreur lors de la récupération des détails du produit:', err);
+          }
+        );        
+      }   
+
+      this.router.navigate([`/product/${productId}`]);
+    } 
   }
 }
