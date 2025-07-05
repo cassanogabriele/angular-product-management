@@ -10,15 +10,6 @@ import { ProductService } from 'src/app/services/product.service';
   styleUrls: ['./auth.component.css']
 })
 export class AuthComponent implements OnInit {
-  isLoggedIn(): boolean {
-    return !!sessionStorage.getItem('authToken');
-  }
-
-  user = {
-    email: '',
-    password: ''
-  };
-
   @ViewChild('loginForm') loginForm!: NgForm;
   alertMessage: string | null = null; // Message d'alerte générique
   successMessage: string | null = null;
@@ -27,6 +18,15 @@ export class AuthComponent implements OnInit {
   totalItems: number = 0; 
   cartItems: any[] = [];
   total: number = 0;
+
+  isLoggedIn(): boolean {
+    return !!sessionStorage.getItem('authToken');
+  }
+
+  user = {
+    email: '',
+    password: ''
+  };  
 
   constructor(
     private dataService: DataService,
